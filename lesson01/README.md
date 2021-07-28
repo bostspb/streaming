@@ -15,9 +15,9 @@
 Прогоняем файл `rate.py` и затем `file.py`
 
 Вывод, который был консоли: 
-- [stdout_rate_py_01.txt](https://github.com/bostspb/streaming/blob/main/lesson01/stdout_rate_py_01.txt)
-- [stdout_rate_py_02.txt](https://github.com/bostspb/streaming/blob/main/lesson01/stdout_rate_py_02.txt)
-- [stdout_file_py.txt](https://github.com/bostspb/streaming/blob/main/lesson01/stdout_file_py.txt)
+- [stdout_rate_py_01.txt](https://github.com/bostspb/streaming/blob/master/lesson01/stdout_rate_py_01.txt)
+- [stdout_rate_py_02.txt](https://github.com/bostspb/streaming/blob/master/lesson01/stdout_rate_py_02.txt)
+- [stdout_file_py.txt](https://github.com/bostspb/streaming/blob/master/lesson01/stdout_file_py.txt)
 
 
 

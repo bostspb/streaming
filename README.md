@@ -14,5 +14,5 @@
 - Запуская скрипт, разобраться в том, как это написано, обрабатывается (операясь на документацию)
 
 **Решение** <br>
-[Ход выполнения задания и результирующий вывод в консоль](https://github.com/bostspb/streaming/blob/main/lesson01/README.md)
+[Ход выполнения задания и результирующий вывод в консоль](https://github.com/bostspb/streaming/blob/master/lesson01/README.md)
 
