@@ -16,3 +16,24 @@
 **Решение** <br>
 [Ход выполнения задания и результирующий вывод в консоль](https://github.com/bostspb/streaming/blob/master/lesson01/README.md)
 
+
+### Урок 2. Kafka. Архитектура
+
+1. Why Apache Kafka
+2. Apache Kafka interchange
+3. Apache Kafka organization
+    - Broker
+    - Zookeeper
+    - Producer
+    - Topic
+    - Partition
+    - Offset
+    - Consumer, Consumer group
+4. Delivery semantics
+
+**Задание** <br>
+Подключится к кластеру и выполнить команды из файла lesson2.practice.txt.
+
+**Решение** <br>
+[Ход выполнения задания и результирующий вывод в консоль](https://github.com/bostspb/streaming/blob/master/lesson02/README.md)
+

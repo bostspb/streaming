@@ -1,0 +1,185 @@
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /usr/hdp/3.1.4.0-315/kafka/bin/kafka-topics.sh --create --topic lesson2_student782_3_topic --zookeeper bigdataanalytics2-worker-shdpt-v31-1-4:2181 --partitions 3 --replication-fa
+ctor 2 --config retention.ms=17280000000
+WARNING: Due to limitations in metric names, topics with a period ('.') or underscore ('_') could collide. To avoid issues it is best to use either, but not both.
+Created topic "lesson2_student782_3_topic".
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /usr/hdp/3.1.4.0-315/kafka/bin/kafka-topics.sh --zookeeper bigdataanalytics2-worker-shdpt-v31-1-4:2181 --alter --config retention.ms=17280000000 --topic lesson2_student782_3_topi
+c
+WARNING: Altering topic configuration from this script has been deprecated and may be removed in future releases.
+         Going forward, please use kafka-configs.sh for this functionality
+Updated config for topic "lesson2_student782_3_topic".
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /usr/hdp/3.1.4.0-315/kafka/bin/kafka-topics.sh --zookeeper bigdataanalytics2-worker-shdpt-v31-1-4:2181 --delete --topic lesson2_student782_3_topic
+Topic lesson2_student782_3_topic is marked for deletion.
+Note: This will have no impact if delete.topic.enable is not set to true.
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /usr/hdp/3.1.4.0-315/kafka/bin/kafka-console-consumer.sh --topic lesson2_student782_3_topic_2 --from-beginning --bootstrap-server bigdataanalytics2-worker-shdpt-v31-1-4:6667
+[2021-07-30 06:26:36,467] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:36,522] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:36,624] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:36,877] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:37,281] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:38,241] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:39,401] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:40,462] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:41,470] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:42,529] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:43,689] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:44,748] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:45,805] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:46,762] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:47,970] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:48,827] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:50,035] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:50,991] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:52,048] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:52,954] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:53,861] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:54,919] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:26:55,775] WARN [Consumer clientId=consumer-1, groupId=console-consumer-74343] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+^C[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /usr/hdp/3.1.4.0-315/kafka/bin/kafka-topics.sh --create --topic lesson2_student782_3_topic --zookeeper bigdataanalytics2-worker-shdpt-v31-1-4:2181 --partitions 3 --replication-
+ctor 2 --config retention.ms=17280000000
+WARNING: Due to limitations in metric names, topics with a period ('.') or underscore ('_') could collide. To avoid issues it is best to use either, but not both.
+Created topic "lesson2_student782_3_topic".
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /usr/hdp/3.1.4.0-315/kafka/bin/kafka-topics.sh --zookeeper bigdataanalytics2-worker-shdpt-v31-1-4:2181 --alter --config retention.ms=17280000000 --topic lesson2_student782_3_topi
+c
+WARNING: Altering topic configuration from this script has been deprecated and may be removed in future releases.
+         Going forward, please use kafka-configs.sh for this functionality
+Updated config for topic "lesson2_student782_3_topic".
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /usr/hdp/3.1.4.0-315/kafka/bin/kafka-console-consumer.sh --topic lesson2_student782_3_topic_2 --from-beginning --bootstrap-server bigdataanalytics2-worker-shdpt-v31-1-4:6667
+[2021-07-30 06:27:35,730] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:35,835] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:35,937] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:36,140] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:36,595] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:37,452] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:38,411] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:39,520] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:40,376] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:41,587] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:42,444] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:43,603] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:44,611] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:45,769] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:46,726] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:47,935] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:48,942] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:50,050] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:51,007] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:52,164] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:53,070] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:54,082] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:54,993] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:56,057] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:57,114] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:57,969] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:58,926] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:27:59,782] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:00,840] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:01,796] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:02,903] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:04,111] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:05,069] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:06,026] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:07,033] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:08,242] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:09,449] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:10,304] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:11,461] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:12,667] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:13,724] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:14,830] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:15,736] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:16,794] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:17,650] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:18,609] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:19,617] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:20,471] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:21,627] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:22,632] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:23,688] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:24,643] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:25,698] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:26,853] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:27,909] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:29,115] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:29,970] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:30,875] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:31,731] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:32,838] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:33,743] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:34,748] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:35,854] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:36,760] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:37,564] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:38,570] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:39,675] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:40,732] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:41,787] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:28:42,692] WARN [Consumer clientId=consumer-1, groupId=console-consumer-65101] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+^C[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /usr/hdp/3.1.4.0-315/kafka/bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list bigdataanalytics2-worker-shdpt-v31-1-5:6667 --topic lesson2_student782_3_topic_2
+Topic lesson2_student782_3_topic_2 does not exist
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /usr/hdp/3.1.4.0-315/kafka/bin/kafka-console-consumer.sh --topic lesson2_student782_3_topic --from-beginning --bootstrap-server bigdataanalytics2-worker-shdpt-v31-1-4:6667
+[2021-07-30 06:30:27,657] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:27,711] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:27,814] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:28,067] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:28,522] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:29,430] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:30,339] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:31,297] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:32,456] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:33,565] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:34,573] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:35,581] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:36,792] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:37,903] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:39,068] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:39,925] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:40,833] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:41,740] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:42,898] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:43,804] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:44,811] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:45,819] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:46,977] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:47,984] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:48,839] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:49,796] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:50,903] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:51,859] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:52,715] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:53,672] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:54,578] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:55,434] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:56,239] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:57,296] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:58,152] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:30:59,258] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:31:00,465] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:31:01,471] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:31:02,378] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:31:03,486] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:31:04,492] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:31:05,699] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:31:06,856] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:31:07,812] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:31:08,767] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+[2021-07-30 06:31:09,874] WARN [Consumer clientId=consumer-1, groupId=console-consumer-3176] Connection to node -1 could not be established. Broker may not be available. (org.apache.kafka.clients.NetworkClient)
+^C[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /usr/hdp/3.1.4.0-315/kafka/bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list bigdataanalytics2-worker-shdpt-v31-1-5:6667 --topic lesson2_student782_3_topic
+lesson2_student782_3_topic:0:1
+lesson2_student782_3_topic:1:0
+lesson2_student782_3_topic:2:1
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /usr/hdp/3.1.4.0-315/kafka/bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list bigdataanalytics2-worker-shdpt-v31-1-5:6667 --topic lesson2_student782_3_topic --offset
+s 1 | awk -F ":" '{sum += $3} END {print sum}'
+2
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /usr/hdp/3.1.4.0-315/kafka/bin/kafka-console-consumer.sh --topic lesson2_student782_3_topic --from-beginning --bootstrap-server bigdataanalytics2-worker-shdpt-v31-1-5:6667
+ыва
+987
+222
+98а5а5
+^CProcessed a total of 4 messages
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /usr/hdp/3.1.4.0-315/kafka/bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list bigdataanalytics2-worker-shdpt-v31-1-5:6667 --topic lesson2_student782_3_topic
+lesson2_student782_3_topic:0:2
+lesson2_student782_3_topic:1:1
+lesson2_student782_3_topic:2:1
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /usr/hdp/3.1.4.0-315/kafka/bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list bigdataanalytics2-worker-shdpt-v31-1-5:6667 --topic lesson2_student782_3_topic --offset
+s 1 | awk -F ":" '{sum += $3} END {print sum}'
+4
