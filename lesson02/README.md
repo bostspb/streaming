@@ -9,6 +9,6 @@
 
 Отрабатываем команды из файла `lesson2.practice.txt`, предварительно заменив названия топиков с `lesson2_topic` на `lesson2_student782_3_topic`
 
-Вывод, который был консоли: 
+Вывод, который был в консоли: 
 - [Основная консоль](https://github.com/bostspb/streaming/blob/master/lesson02/stdout_console_01.txt)
 - [Консоль, в которой запускался продюсер](https://github.com/bostspb/streaming/blob/master/lesson02/stdout_console_02.txt)
