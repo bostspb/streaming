@@ -11,7 +11,4 @@
 
 Вывод, который был консоли: 
 - [Основная консоль](https://github.com/bostspb/streaming/blob/master/lesson02/stdout_console_01.txt)
-- [Консоль, в которой запускался продюсер](https://github.com/bostspb/streaming/blob/master/lesson01/stdout_rate_py_02.txt)
-
-
-
+- [Консоль, в которой запускался продюсер](https://github.com/bostspb/streaming/blob/master/lesson02/stdout_console_02.txt)
