@@ -52,3 +52,14 @@
       
 **Решение** <br>
 [Ход выполнения задания и результирующий вывод в консоль PySpark](https://github.com/bostspb/streaming/blob/master/lesson03/README.md)
+
+
+### Урок 4. Spark Streaming. Sinks
+
+**Задание** <br>
+- Запустить скрипты и предположить, что можно решать на основе разных Sink'ов.
+- Обязательно ознакомиться с документацией.
+- Опциональным будет запустить эксперименты на уровне Spark API.
+      
+**Решение** <br>
+[Ход выполнения задания](https://github.com/bostspb/streaming/blob/master/lesson04/README.md)

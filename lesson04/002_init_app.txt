@@ -1,0 +1,16 @@
+>>> from pyspark.sql import SparkSession
+>>> from pyspark.sql import functions as F
+>>> from pyspark.sql.types import StructType, StringType
+>>>
+>>>
+>>> spark = SparkSession.builder.appName("spark_sinks_app").getOrCreate()
+>>>
+>>> in_memory_table_name = "memory_output_table"
+>>> output_path = "tmp/orders_file_output"
+>>> checkpoint_location = "tmp/orders_checkpoint"
+>>>
+>>> source_topic = "orders_topic_json"
+>>> target_row_topic = "orders_modified_topic_row"
+>>> target_json_topic = "orders_modified_topic_json"
+>>>
+>>> kafka_brokers = "bigdataanalytics2-worker-shdpt-v31-1-0:6667"

@@ -1,0 +1,406 @@
+Python 2.7.5 (default, Nov 16 2020, 22:23:17)
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-44)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+Warning: Ignoring non-Spark config property: hive.metastore.uris
+Ivy Default Cache set to: /home/student782_3/.ivy2/cache
+The jars for the packages stored in: /home/student782_3/.ivy2/jars
+:: loading settings :: url = jar:file:/spark2.4/jars/ivy-2.4.0.jar!/org/apache/ivy/core/settings/ivysettings.xml
+org.apache.spark#spark-sql-kafka-0-10_2.11 added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-3f57c98a-7bd7-4043-9024-f102b39c5c36;1.0
+        confs: [default]
+        found org.apache.spark#spark-sql-kafka-0-10_2.11;2.4.7 in central
+        found org.apache.kafka#kafka-clients;2.0.0 in central
+        found org.lz4#lz4-java;1.4.0 in central
+        found org.xerial.snappy#snappy-java;1.1.7.5 in central
+        found org.slf4j#slf4j-api;1.7.16 in central
+        found org.spark-project.spark#unused;1.0.0 in central
+:: resolution report :: resolve 426ms :: artifacts dl 16ms
+        :: modules in use:
+        org.apache.kafka#kafka-clients;2.0.0 from central in [default]
+        org.apache.spark#spark-sql-kafka-0-10_2.11;2.4.7 from central in [default]
+        org.lz4#lz4-java;1.4.0 from central in [default]
+        org.slf4j#slf4j-api;1.7.16 from central in [default]
+        org.spark-project.spark#unused;1.0.0 from central in [default]
+        org.xerial.snappy#snappy-java;1.1.7.5 from central in [default]
+        ---------------------------------------------------------------------
+        |                  |            modules            ||   artifacts   |
+        |       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+        ---------------------------------------------------------------------
+        |      default     |   6   |   0   |   0   |   0   ||   6   |   0   |
+        ---------------------------------------------------------------------
+:: retrieving :: org.apache.spark#spark-submit-parent-3f57c98a-7bd7-4043-9024-f102b39c5c36
+        confs: [default]
+        0 artifacts copied, 6 already retrieved (0kB/10ms)
+21/08/09 04:45:00 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /__ / .__/\_,_/_/ /_/\_\   version 2.4.7
+      /_/
+
+Using Python version 2.7.5 (default, Nov 16 2020 22:23:17)
+SparkSession available as 'spark'.
+>>> from pyspark.sql import SparkSession
+>>> from pyspark.sql import functions as F
+>>> from pyspark.sql.types import StructType, StringType
+>>>
+>>>
+>>> spark = SparkSession.builder.appName("spark_sinks_app").getOrCreate()
+>>>
+>>> in_memory_table_name = "memory_output_table"
+>>> output_path = "tmp/orders_file_output"
+>>> checkpoint_location = "tmp/orders_checkpoint"
+>>>
+>>> # Read stream from Kafka #
+... # ====================== #
+... source_topic = "orders_topic_json"
+>>> target_row_topic = "orders_modified_topic_row"
+>>> target_json_topic = "orders_modified_topic_json"
+>>>
+>>> kafka_brokers = "bigdataanalytics2-worker-shdpt-v31-1-0:6667"
+>>>
+>>> # read stream
+... raw_orders = spark.readStream. \
+...     format("kafka"). \
+...     option("kafka.bootstrap.servers", kafka_brokers). \
+...     option("subscribe", source_topic). \
+...     option("maxOffsetsPerTrigger", "50"). \
+...     option("startingOffsets", "earliest"). \
+...     load()
+>>>
+>>> schema = StructType() \
+...     .add("order_id", StringType()) \
+...     .add("customer_id", StringType()) \
+...     .add("order_status", StringType()) \
+...     .add("order_purchase_timestamp", StringType()) \
+...     .add("order_approved_at", StringType()) \
+...     .add("order_delivered_carrier_date", StringType()) \
+...     .add("order_delivered_customer_date", StringType()) \
+...     .add("order_estimated_delivery_date", StringType())
+>>>
+>>> parsed_orders = raw_orders \
+...     .select(F.from_json(F.col("value").cast("String"), schema).alias("value"), "offset") \
+...     .select("value.*")
+>>>
+>>> def file_output(df, freq):
+...     return df\
+...         .writeStream\
+...         .format("parquet") \
+...         .trigger(processingTime='%s seconds' % freq) \
+...         .option("path", output_path) \
+...         .option("checkpointLocation", checkpoint_location) \
+...         .start()
+...
+>>> stream = file_output(parsed_orders, 5)
+21/08/09 05:02:34 WARN shortcircuit.DomainSocketFactory: The short-circuit local reads feature cannot be used because libhadoop cannot be loaded.
+>>> 21/08/09 05:02:35 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be avai
+lable.
+21/08/09 05:02:35 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:35 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:35 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:36 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:37 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:38 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:39 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:40 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:41 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:42 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:43 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:44 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:45 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:46 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+stream.stop()21/08/09 05:02:47 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may no
+t be available.
+
+21/08/09 05:02:48 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+stream.stop()
+21/08/09 05:02:49 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:50 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+stream.stop()
+21/08/09 05:02:51 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+stream.stop()
+21/08/09 05:02:52 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+stream.stop()
+21/08/09 05:02:54 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:55 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:56 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:57 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:58 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:02:59 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+^CTraceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/spark2.4/python/pyspark/sql/streaming.py", line 152, in stop
+    self._jsq.stop()
+  File "/spark2.4/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py", line 1255, in __call__
+  File "/spark2.4/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py", line 985, in send_command
+  File "/spark2.4/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py", line 1152, in send_command
+  File "/usr/lib64/python2.7/socket.py", line 447, in readline
+    data = self._sock.recv(self._rbufsize)
+  File "/spark2.4/python/pyspark/context.py", line 270, in signal_handler
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+>>> 21/08/09 05:02:59 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be avai
+lable.
+21/08/09 05:03:01 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:01 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:02 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:03 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:04 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:05 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:06 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:07 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:08 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:09 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:10 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:11 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:13 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:14 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:15 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:16 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:17 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:18 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:19 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:20 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:21 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:22 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:23 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:24 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:25 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:26 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:27 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:28 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:29 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:30 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:31 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:32 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:33 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:34 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:35 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:36 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:37 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:38 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:39 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:40 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:41 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:42 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:43 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:44 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:45 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:46 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:47 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:48 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:49 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:50 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:03:51 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+stream.stop()
+21/08/09 05:03:52 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+stream.stop()
+21/08/09 05:03:53 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+stream.stop()
+stream.stop()
+21/08/09 05:03:54 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+stream.stop()
+stream.stop()
+21/08/09 05:03:55 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+stream.stop()
+stream.stop()
+stream.stop()
+21/08/09 05:03:56 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+stream.stop()
+stream.stop()
+
+stream.stop()
+stream.stop()21/08/09 05:03:58 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may no
+t be available.
+
+stream.stop()
+stream.stop()
+
+stream.stop()
+21/08/09 05:03:59 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+stream.stop()
+stream.stop()
+
+stream.stop()21/08/09 05:04:00 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may no
+t be available.
+21/08/09 05:04:01 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:02 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:03 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:04 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:05 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:06 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:07 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:08 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:09 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:10 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:11 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:12 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:13 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:14 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:16 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:16 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:17 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:18 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:20 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+^CTraceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/spark2.4/python/pyspark/sql/streaming.py", line 152, in stop
+    self._jsq.stop()
+  File "/spark2.4/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py", line 1255, in __call__
+  File "/spark2.4/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py", line 985, in send_command
+  File "/spark2.4/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py", line 1152, in send_command
+  File "/usr/lib64/python2.7/socket.py", line 447, in readline
+    data = self._sock.recv(self._rbufsize)
+  File "/spark2.4/python/pyspark/context.py", line 270, in signal_handler
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+>>>
+Traceback (most recent call last):
+  File "/spark2.4/python/pyspark/context.py", line 270, in signal_handler
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+>>> 21/08/09 05:04:21 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be avai
+lable.
+
+Traceback (most recent call last):
+  File "/spark2.4/python/pyspark/context.py", line 270, in signal_handler
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+>>> 21/08/09 05:04:22 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be avai
+lable.
+21/08/09 05:04:23 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:24 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:25 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:26 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:27 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:28 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:29 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:30 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:31 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:32 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:33 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:34 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:35 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+21/08/09 05:04:36 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+exit()
+21/08/09 05:04:37 WARN clients.NetworkClient: [Consumer clientId=consumer-1, groupId=spark-kafka-source-29838005-1dd3-4658-b6e4-b6fd3003e3cc-433752199-driver-0] Connection to node -1 could not be established. Broker may not be availabl
+e.
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ exit()
