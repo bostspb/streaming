@@ -1,0 +1,535 @@
+>>> from pyspark.sql import SparkSession
+>>> from pyspark.sql import functions as F
+_id", StringType()) \
+    .add("order_status", StringType()) \
+    .add("order_purchase_timestamp", StringType()) \
+    .add("order_approved_at", StringType()) \
+    .add("order_delivered_carrier_date", StringType()) \
+    .add("order_delivered_customer_date", StringType()) \
+    .add("order_estimated_delivery_date", StringType())
+
+parsed_orders = raw_orders \
+    .select(F.from_json(F.col("value").cast("String"), schema).alias("value"), "offset") \
+    .select("value.*")
+
+# Console output
+def console_output(df, freq):
+    return df.writeStream \
+        .format("console") \
+        .trigger(processingTime='%s seconds' % freq) \
+        .options(truncate=False) \
+        .start()>>> from pyspark.sql.types import StructType, StringType
+>>>
+>>>
+>>> spark = SparkSession.builder.appName("spark_sinks_app").getOrCreate()
+>>>
+>>> in_memory_table_name = "memory_output_table"
+>>> output_path = "tmp/orders_file_output"
+>>> checkpoint_location = "tmp/orders_checkpoint"
+>>>
+>>> # Read stream from Kafka #
+... # ====================== #
+... source_topic = "orders_topic_json"
+>>> target_row_topic = "orders_modified_topic_row"
+>>> target_json_topic = "orders_modified_topic_json"
+>>>
+>>> kafka_brokers = "bigdataanalytics2-worker-shdpt-v31-1-0:6667"
+>>>
+>>> # read stream
+... raw_orders = spark.readStream. \
+...     format("kafka"). \
+...     option("kafka.bootstrap.servers", kafka_brokers). \
+...     option("subscribe", source_topic). \
+...     option("maxOffsetsPerTrigger", "50"). \
+...     option("startingOffsets", "earliest"). \
+...     load()
+>>>
+>>> schema = StructType() \
+...     .add("order_id", StringType()) \
+...     .add("customer_id", StringType()) \
+...     .add("order_status", StringType()) \
+...     .add("order_purchase_timestamp", StringType()) \
+...     .add("order_approved_at", StringType()) \
+...     .add("order_delivered_carrier_date", StringType()) \
+...     .add("order_delivered_customer_date", StringType()) \
+...     .add("order_estimated_delivery_date", StringType())
+>>>
+>>> parsed_orders = raw_orders \
+...     .select(F.from_json(F.col("value").cast("String"), schema).alias("value"), "offset") \
+...     .select("value.*")
+>>>
+>>> # Console output
+... def console_output(df, freq):
+...     return df.writeStream \
+...         .format("console") \
+...         .trigger(processingTime='%s seconds' % freq) \
+...         .options(truncate=False) \
+...         .start()
+...
+>>> kafka_row_formatted_output = parsed_orders.selectExpr("CAST(null AS STRING) as key", "CAST(struct(*) AS STRING) as value")
+>>>
+>>> out = console_output(kafka_row_formatted_output, 5)
+21/08/12 16:04:07 WARN shortcircuit.DomainSocketFactory: The short-circuit local reads feature cannot be used because libhadoop cannot be loaded.
+-------------------------------------------
+Batch: 0
+-------------------------------------------
++----+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|key |value                                                                                                                                                                                   |
++----+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|null|[76c6e866289321a7c93b82b54852dc33, f54a9f0e6b351c431402b8461ea51999, delivered, 2017-01-23 18:29:09, 2017-01-25 02:50:47, 2017-01-26 14:16:31, 2017-02-02 14:08:10, 2017-03-06 00:00:00]|
+|null|[5ff96c15d0b717ac6ad1f3d77225a350, 19402a48fe860416adf93348aba37740, delivered, 2018-07-25 17:44:10, 2018-07-25 17:55:14, 2018-07-26 13:16:00, 2018-07-30 15:52:25, 2018-08-08 00:00:00]|
+|null|[403b97836b0c04a622354cf531062e5f, 738b086814c6fcc74b8cc583f8516ee3, delivered, 2018-01-02 19:00:43, 2018-01-02 19:09:04, 2018-01-03 18:19:09, 2018-01-20 01:38:59, 2018-02-06 00:00:00]|
+|null|[116f0b09343b49556bbad5f35bee0cdf, 3187789bec990987628d7a9beb4dd6ac, delivered, 2017-12-26 23:41:31, 2017-12-26 23:50:22, 2017-12-28 18:33:05, 2018-01-08 22:36:36, 2018-01-29 00:00:00]|
+|null|[85ce859fd6dc634de8d2f1e290444043, 059f7fc5719c7da6cbafe370971a8d70, delivered, 2017-11-21 00:03:41, 2017-11-21 00:14:22, 2017-11-23 21:32:26, 2017-11-27 18:28:00, 2017-12-11 00:00:00]|
+|null|[95266dbfb7e20354baba07964dac78d5, a166da34890074091a942054b36e4265, delivered, 2018-01-08 07:55:29, 2018-01-08 08:07:31, 2018-01-24 23:16:37, 2018-01-26 17:32:38, 2018-02-21 00:00:00]|
+|null|[f3e7c359154d965827355f39d6b1fdac, 62b423aab58096ca514ba6aa06be2f98, delivered, 2018-08-09 11:44:40, 2018-08-10 03:24:51, 2018-08-10 12:29:00, 2018-08-13 18:24:27, 2018-08-17 00:00:00]|
+|null|[fbf9ac61453ac646ce8ad9783d7d0af6, 3a874b4d4c4b6543206ff5d89287f0c3, delivered, 2018-02-20 23:46:53, 2018-02-22 02:30:46, 2018-02-26 22:25:22, 2018-03-21 22:03:54, 2018-03-12 00:00:00]|
+|null|[f70a0aff17df5a6cdd9a7196128bd354, 456dc10730fbdba34615447ea195d643, delivered, 2017-08-10 11:58:33, 2017-08-12 02:45:24, 2017-08-17 15:35:07, 2017-08-18 14:28:02, 2017-08-23 00:00:00]|
+|null|[989225ba6d0ebd5873335f7e01de2ae7, 816f8653d5361cbf94e58c33f2502a5c, delivered, 2017-12-12 13:56:04, 2017-12-14 13:54:13, 2017-12-16 00:18:57, 2018-01-03 18:03:36, 2018-01-08 00:00:00]|
+|null|[8563039e855156e48fccee4d611a3196, 5f16605299d698660e0606f7eae2d2f9, delivered, 2018-02-17 15:59:46, 2018-02-17 16:15:34, 2018-02-20 23:03:56, 2018-03-20 00:59:25, 2018-03-20 00:00:00]|
+|null|[5acce57f8d9dfd55fa48e212a641a69d, 295ae9b35379e077273387ff64354b6f, delivered, 2017-07-31 21:37:10, 2017-08-02 02:56:02, 2017-08-03 18:32:48, 2017-08-08 21:24:41, 2017-08-22 00:00:00]|
+|null|[1e7aff52cdbb2451ace09d0f848c3699, ddaff536587109b89777e0353215e150, delivered, 2017-05-19 18:53:40, 2017-05-19 19:05:17, 2017-05-22 10:16:07, 2017-05-31 13:58:46, 2017-06-12 00:00:00]|
+|null|[6ebaec694d7025e2ad4a05dba887c032, 4f28355e5c17a4a42d3ce2439a1d4501, delivered, 2017-05-18 13:55:47, 2017-05-18 14:05:17, 2017-05-19 12:01:38, 2017-05-29 12:47:20, 2017-06-09 00:00:00]|
+|null|[d17dc4a904426827ca80f2ccb3a6be56, 569cf68214806a39acc0f39344aea67f, delivered, 2017-05-14 20:28:25, 2017-05-14 20:42:45, 2017-05-16 08:17:46, 2017-05-25 09:14:31, 2017-06-12 00:00:00]|
+|null|[5820a1100976432c7968a52da59e9364, 2b56e94c2f66f2d97cfa63356f69cee8, delivered, 2018-07-29 11:24:17, 2018-07-29 11:44:19, 2018-07-30 13:47:00, 2018-08-02 22:09:11, 2018-08-13 00:00:00]|
+|null|[47770eb9100c2d0c44946d9cf07ec65d, 41ce2a54c0b03bf3443c3d931a367089, delivered, 2018-08-08 08:38:49, 2018-08-08 08:55:23, 2018-08-08 13:50:00, 2018-08-17 18:06:29, 2018-09-04 00:00:00]|
+|null|[ad21c59c0840e6cb83a9ceb5573f8159, 8ab97904e6daea8866dbdbc4fb7aad2c, delivered, 2018-02-13 21:18:39, 2018-02-13 22:20:29, 2018-02-14 19:46:34, 2018-02-16 18:17:02, 2018-02-26 00:00:00]|
+|null|[136cce7faa42fdb2cefd53fdc79a6098, ed0271e0b7da060a393796590e7b737a, invoiced, 2017-04-11 12:22:08, 2017-04-13 13:25:17, , , 2017-05-09 00:00:00]                                       |
+|null|[e69bfb5eb88e0ed6a785585b27e16dbf, 31ad1d1b63eb9962463f764d4e6e0c9d, delivered, 2017-07-29 11:55:02, 2017-07-29 12:05:32, 2017-08-10 19:45:24, 2017-08-16 17:14:30, 2017-08-23 00:00:00]|
++----+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+only showing top 20 rows
+
+21/08/12 16:04:14 WARN streaming.ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 5883 milliseconds
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++----+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|key |value                                                                                                                                                                                   |
++----+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|null|[47aa4816b27ba60ec948cd019cc1afc1, 148348ff65384b4249b762579532e248, delivered, 2018-06-26 13:42:52, 2018-06-27 08:35:32, 2018-06-27 13:20:00, 2018-07-03 18:37:46, 2018-07-20 00:00:00]|
+|null|[9faeb9b2746b9d7526aef5acb08e2aa0, 79183cd650e2bb0d475b0067d45946ac, delivered, 2018-07-26 14:39:59, 2018-07-26 14:55:10, 2018-07-27 12:04:00, 2018-07-31 22:26:55, 2018-08-16 00:00:00]|
+|null|[641fb0752bf5b5940c376b3a8bb9dc52, f5afca14dfa9dc64251cf2b45c54c363, delivered, 2017-12-15 00:06:10, 2017-12-15 00:14:55, 2017-12-19 01:58:00, 2018-01-03 15:09:32, 2018-01-16 00:00:00]|
+|null|[a685d016c8a26f71a0bb67821070e398, 911e4c37f5cafe1604fe6767034bf1ae, delivered, 2017-03-13 18:14:36, 2017-03-13 18:14:36, 2017-03-22 14:03:09, 2017-04-06 13:37:16, 2017-03-30 00:00:00]|
+|null|[f271576bed568e896f99eb710cd3a6f8, 5dda11942d4f77bee3a46d71e442aec4, delivered, 2018-01-07 21:44:54, 2018-01-07 21:51:28, 2018-01-10 21:56:09, 2018-01-17 20:26:31, 2018-02-14 00:00:00]|
+|null|[68e48e68da1f50f7c5838ea75e3a20dd, 4afc1dcca5fe8926fc97d60a4497f8ab, delivered, 2018-06-18 16:02:23, 2018-06-18 17:00:57, 2018-06-19 15:55:00, 2018-06-22 21:18:51, 2018-07-13 00:00:00]|
+|null|[974c1993ab8024d3ed16229183c2308d, a90391a47de936d56c66a5366cba1462, delivered, 2017-02-20 11:45:39, 2017-02-22 03:10:20, 2017-02-23 06:47:35, 2017-03-09 14:27:58, 2017-03-21 00:00:00]|
+|null|[bd4bd0194d6d29f83b8557d4b89b572a, 636e15840ab051faa13d3f781b6e4233, delivered, 2018-07-28 16:52:55, 2018-07-31 03:50:24, 2018-08-01 16:01:00, 2018-08-06 18:44:46, 2018-08-08 00:00:00]|
+|null|[3bc77ce8be27211bac313c2daa402d1a, bf141bf67fbe428d558bcf0e018eab60, delivered, 2017-04-06 22:39:29, 2017-04-06 22:50:24, 2017-04-07 14:54:18, 2017-04-11 12:31:36, 2017-04-27 00:00:00]|
+|null|[10c320f977c6a18f91b2d14be13128c6, b673f0597cb0c4d12778f731045f361a, delivered, 2017-05-09 20:48:59, 2017-05-09 21:02:45, 2017-05-10 11:22:15, 2017-05-18 13:22:35, 2017-06-01 00:00:00]|
+|null|[e4de6d53ecff736bc68804b0b6e9f635, 9f6618c17568ac301465fe7ad056c674, delivered, 2017-10-16 14:56:50, 2017-10-17 03:49:34, 2017-10-27 22:14:21, 2017-11-08 21:25:24, 2017-11-21 00:00:00]|
+|null|[6b860b35691d486e45dc98e3514ec5f6, fee181bf648906d1c57f84f216976286, delivered, 2017-12-08 09:42:43, 2017-12-09 02:49:54, 2017-12-11 15:19:04, 2017-12-19 18:43:35, 2018-01-03 00:00:00]|
+|null|[cadbb3657dac2dbbd5b84b12e7b78aad, 93ada7a24817edda9f4ab998fa823d16, delivered, 2018-02-27 12:55:42, 2018-03-01 02:48:54, 2018-03-03 02:27:03, 2018-03-16 14:59:01, 2018-03-29 00:00:00]|
+|null|[0e782c3705510e717d28907746cbda82, 3a897024068ed42a183de61d5727d866, delivered, 2018-05-01 08:12:37, 2018-05-01 08:52:58, 2018-05-02 19:01:00, 2018-05-04 14:02:26, 2018-05-16 00:00:00]|
+|null|[d3d6788577c9592da441752e8a1dd5e3, 8628fac2267e8c8804525da99c10ed0e, delivered, 2017-09-19 22:17:15, 2017-09-20 07:55:14, 2017-09-22 17:23:09, 2017-10-10 18:43:53, 2017-10-13 00:00:00]|
+|null|[8447ff843b2616c50c0ced28ab1dae03, e28dd4261bed9c7ba89ecaf411b88f7c, delivered, 2017-12-20 23:45:07, 2017-12-22 02:37:45, 2017-12-23 13:10:45, 2018-01-09 18:14:02, 2018-01-22 00:00:00]|
+|null|[2ce1ad82022c1ba30c2079502ac725aa, 7f2178c5d771e17f507d3c1637339298, delivered, 2017-08-09 20:19:05, 2017-08-11 04:15:29, 2017-08-11 17:52:32, 2017-08-16 17:16:44, 2017-08-31 00:00:00]|
+|null|[138849fd84dff2fb4ca70a0a34c4aa1c, 9b18f3fc296990b97854e351334a32f6, delivered, 2018-02-01 14:02:19, 2018-02-03 02:53:07, 2018-02-06 19:13:26, 2018-02-14 13:41:59, 2018-02-23 00:00:00]|
+|null|[40c5e18f7d112b59b3e5113a59a905b3, 67407057a7d5ee17d1cd09523f484d13, delivered, 2018-06-11 10:25:52, 2018-06-11 10:58:32, 2018-06-14 13:03:00, 2018-06-19 00:31:13, 2018-07-16 00:00:00]|
+|null|[f346ad4ee8f630e5e4ddaf862a34e6dd, dd5095632e3953fc0947b8ab5176b0be, delivered, 2018-08-05 13:09:48, 2018-08-05 13:24:34, 2018-08-06 13:41:00, 2018-08-10 18:35:40, 2018-08-15 00:00:00]|
++----+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+only showing top 20 rows
+
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++----+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|key |value                                                                                                                                                                                   |
++----+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|null|[6a0a8bfbbe700284feb0845d95e0867f, 68451b39b1314302c08c65a29f1140fc, delivered, 2017-11-22 11:32:22, 2017-11-22 11:46:50, 2017-11-27 13:39:35, 2017-12-28 19:43:00, 2017-12-11 00:00:00]|
+|null|[e3447938231fb6ba2fee0231b51eca59, 2c3642e1392097fb4af76a76fec16a46, delivered, 2018-08-26 11:04:26, 2018-08-26 11:15:29, 2018-08-27 15:52:00, 2018-08-28 21:06:31, 2018-08-30 00:00:00]|
+|null|[e346cd9299371b18c0b28e8e29a5e376, fb9590a1e30e0ba8304ea73a31325797, delivered, 2017-05-17 08:36:11, 2017-05-17 08:45:09, 2017-05-17 10:13:52, 2017-05-23 13:32:30, 2017-06-06 00:00:00]|
+|null|[66d03fb3c4b0f80b5db04ef9c260336d, c39bde0d4030d5e31e654f0c20db9786, delivered, 2018-02-06 21:09:10, 2018-02-06 21:29:40, 2018-02-07 17:13:05, 2018-02-16 20:24:42, 2018-03-07 00:00:00]|
+|null|[a6cd683d4bd3b9b1f0aa37b27f8116d3, 48f239e15744ed5e7ffbafc6bb6e882b, delivered, 2017-01-28 23:45:53, 2017-01-29 01:31:48, 2017-02-01 14:25:06, 2017-02-10 17:30:19, 2017-03-10 00:00:00]|
+|null|[bfe42c22ecbf90bc9f35cf591270b6a7, 803ac05904124294f8767894d6da532b, delivered, 2018-01-27 22:04:34, 2018-01-27 22:16:18, 2018-02-03 03:56:00, 2018-02-09 20:16:40, 2018-02-26 00:00:00]|
+|null|[4da3bd761ca73d692ae0f5c252495546, 65ee4aa816cda8ad41e05c75e1cb691e, delivered, 2018-02-01 12:31:21, 2018-02-01 12:54:33, 2018-02-02 00:39:31, 2018-02-02 16:12:53, 2018-02-19 00:00:00]|
+|null|[c75acba615d2db29345327974641467d, 2b47ff70d422cc3ada976dea40f48782, delivered, 2018-07-06 23:36:15, 2018-07-07 10:10:09, 2018-07-10 14:25:00, 2018-07-13 17:18:42, 2018-08-10 00:00:00]|
+|null|[210e60465099814a1d2c7635e4065153, fc849c5fbc7e2b0c7cfebc138886c693, delivered, 2018-05-09 18:27:00, 2018-05-09 18:54:13, 2018-05-10 16:07:00, 2018-05-22 00:08:26, 2018-05-29 00:00:00]|
+|null|[f2fa3795760c35b8c05fa8e2f09d5143, fac60d7c4df3896a5af5db6c91e03797, delivered, 2018-03-31 14:20:46, 2018-04-03 05:10:21, 2018-04-05 00:44:42, 2018-04-07 00:06:33, 2018-05-04 00:00:00]|
+|null|[3923e3ade70348985bd2ca389905cf19, 6454e6cba392b35aa21527063026fc92, delivered, 2018-03-07 23:00:33, 2018-03-09 03:00:35, 2018-03-14 02:08:26, 2018-03-19 18:46:32, 2018-03-29 00:00:00]|
+|null|[35660aec0cc42b6257e24281ee0e6255, b53cc3c992caaa45ec73cfdde4d839b5, delivered, 2017-03-30 14:46:00, 2017-03-30 14:55:17, 2017-04-10 18:53:49, 2017-04-27 11:08:55, 2017-05-12 00:00:00]|
+|null|[5164933efe0cd14f31424b9badf81f19, d0e71d7a6dbca8ac513ac63d08a81fa0, delivered, 2018-04-25 22:18:10, 2018-04-25 22:31:56, 2018-04-26 12:35:00, 2018-04-27 16:50:03, 2018-05-14 00:00:00]|
+|null|[65312c6e4ce03c0fb633a4ac541949d8, 228da462edabbbc68e6d265087499705, delivered, 2018-07-22 15:19:05, 2018-07-23 12:32:22, 2018-07-25 10:06:00, 2018-08-02 21:08:57, 2018-08-13 00:00:00]|
+|null|[89165e6d4c28047da0adf13ac8b3e1b3, 4924a47e8cd5630b3564e26fac55c5ec, delivered, 2018-07-18 13:39:54, 2018-07-18 13:50:14, 2018-07-24 14:14:00, 2018-07-26 18:26:37, 2018-07-30 00:00:00]|
+|null|[f376081d7c5f1767fbc7fae2d19ca32e, d68901955dc622165460ba6cb4ac49f3, delivered, 2017-03-28 16:03:34, 2017-03-28 16:15:15, 2017-03-29 13:23:55, 2017-03-31 10:07:25, 2017-04-17 00:00:00]|
+|null|[0a4a2fccb27bd83a892fa503987a595b, 6772a0a230a2667d16c3620f000e1348, delivered, 2017-04-20 20:42:44, 2017-04-20 20:55:09, 2017-04-25 08:23:08, 2017-05-11 13:07:46, 2017-05-25 00:00:00]|
+|null|[ec341c54a5ebf8ee0a67a8632aa7579b, df9b032b2ad0fd6bf37dfb48e5f83845, delivered, 2017-08-26 16:53:30, 2017-08-27 17:04:12, 2017-08-30 13:26:32, 2017-09-08 20:39:56, 2017-09-21 00:00:00]|
+|null|[9defaf92cff22420e4e8ef7784815a55, 64fb950e760ec8b0db79154a1fa9c1bf, delivered, 2018-05-11 13:10:51, 2018-05-11 13:36:50, 2018-05-16 14:43:00, 2018-05-21 16:09:55, 2018-06-05 00:00:00]|
+|null|[77e9941864fc840be8e4b1ba5347c0f7, 3135962ee745ef39b85576df7ddbaa99, delivered, 2018-08-03 08:59:39, 2018-08-03 09:31:36, 2018-08-03 10:10:00, 2018-08-17 00:49:41, 2018-08-27 00:00:00]|
++----+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+only showing top 20 rows
+
+out.stop()
+>>> def kafka_output(df, freq, topic):
+...     return df \
+...         .writeStream \
+...         .format("kafka") \
+...         .trigger(processingTime='%s seconds' % freq) \
+...         .option("topic", topic) \
+...         .option("kafka.bootstrap.servers", kafka_brokers) \
+...         .option("checkpointLocation", checkpoint_location) \
+...         .start()
+...
+>>> stream = kafka_output(kafka_row_formatted_output, 5, target_row_topic)
+>>> stream.stop()
+>>> stream = kafka_output(kafka_row_formatted_output, 5, target_row_topic)
+>>> stream.stop()
+>>> kafka_json_formatted_output = parsed_orders.selectExpr("CAST(null AS STRING) as key", "CAST(to_json(struct(*)) AS STRING) as value")
+>>> out = console_output(kafka_json_formatted_output, 5)
+>>> -------------------------------------------
+Batch: 0
+-------------------------------------------
++----+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------+
+|key |value
+                                                                                                                                                  |
++----+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------+
+|null|{"order_id":"76c6e866289321a7c93b82b54852dc33","customer_id":"f54a9f0e6b351c431402b8461ea51999","order_status":"delivered","order_purchase_timestamp":"2017-01-23 18:29:09","order_approved_at":"2017-01-25 02:50:47","order_delivere
+d_carrier_date":"2017-01-26 14:16:31","order_delivered_customer_date":"2017-02-02 14:08:10","order_estimated_delivery_date":"2017-03-06 00:00:00"}|
+|null|{"order_id":"5ff96c15d0b717ac6ad1f3d77225a350","customer_id":"19402a48fe860416adf93348aba37740","order_status":"delivered","order_purchase_timestamp":"2018-07-25 17:44:10","order_approved_at":"2018-07-25 17:55:14","order_delivere
+d_carrier_date":"2018-07-26 13:16:00","order_delivered_customer_date":"2018-07-30 15:52:25","order_estimated_delivery_date":"2018-08-08 00:00:00"}|
+|null|{"order_id":"403b97836b0c04a622354cf531062e5f","customer_id":"738b086814c6fcc74b8cc583f8516ee3","order_status":"delivered","order_purchase_timestamp":"2018-01-02 19:00:43","order_approved_at":"2018-01-02 19:09:04","order_delivere
+d_carrier_date":"2018-01-03 18:19:09","order_delivered_customer_date":"2018-01-20 01:38:59","order_estimated_delivery_date":"2018-02-06 00:00:00"}|
+|null|{"order_id":"116f0b09343b49556bbad5f35bee0cdf","customer_id":"3187789bec990987628d7a9beb4dd6ac","order_status":"delivered","order_purchase_timestamp":"2017-12-26 23:41:31","order_approved_at":"2017-12-26 23:50:22","order_delivere
+d_carrier_date":"2017-12-28 18:33:05","order_delivered_customer_date":"2018-01-08 22:36:36","order_estimated_delivery_date":"2018-01-29 00:00:00"}|
+|null|{"order_id":"85ce859fd6dc634de8d2f1e290444043","customer_id":"059f7fc5719c7da6cbafe370971a8d70","order_status":"delivered","order_purchase_timestamp":"2017-11-21 00:03:41","order_approved_at":"2017-11-21 00:14:22","order_delivere
+d_carrier_date":"2017-11-23 21:32:26","order_delivered_customer_date":"2017-11-27 18:28:00","order_estimated_delivery_date":"2017-12-11 00:00:00"}|
+|null|{"order_id":"95266dbfb7e20354baba07964dac78d5","customer_id":"a166da34890074091a942054b36e4265","order_status":"delivered","order_purchase_timestamp":"2018-01-08 07:55:29","order_approved_at":"2018-01-08 08:07:31","order_delivere
+d_carrier_date":"2018-01-24 23:16:37","order_delivered_customer_date":"2018-01-26 17:32:38","order_estimated_delivery_date":"2018-02-21 00:00:00"}|
+|null|{"order_id":"f3e7c359154d965827355f39d6b1fdac","customer_id":"62b423aab58096ca514ba6aa06be2f98","order_status":"delivered","order_purchase_timestamp":"2018-08-09 11:44:40","order_approved_at":"2018-08-10 03:24:51","order_delivere
+d_carrier_date":"2018-08-10 12:29:00","order_delivered_customer_date":"2018-08-13 18:24:27","order_estimated_delivery_date":"2018-08-17 00:00:00"}|
+|null|{"order_id":"fbf9ac61453ac646ce8ad9783d7d0af6","customer_id":"3a874b4d4c4b6543206ff5d89287f0c3","order_status":"delivered","order_purchase_timestamp":"2018-02-20 23:46:53","order_approved_at":"2018-02-22 02:30:46","order_delivere
+d_carrier_date":"2018-02-26 22:25:22","order_delivered_customer_date":"2018-03-21 22:03:54","order_estimated_delivery_date":"2018-03-12 00:00:00"}|
+|null|{"order_id":"f70a0aff17df5a6cdd9a7196128bd354","customer_id":"456dc10730fbdba34615447ea195d643","order_status":"delivered","order_purchase_timestamp":"2017-08-10 11:58:33","order_approved_at":"2017-08-12 02:45:24","order_delivere
+d_carrier_date":"2017-08-17 15:35:07","order_delivered_customer_date":"2017-08-18 14:28:02","order_estimated_delivery_date":"2017-08-23 00:00:00"}|
+|null|{"order_id":"989225ba6d0ebd5873335f7e01de2ae7","customer_id":"816f8653d5361cbf94e58c33f2502a5c","order_status":"delivered","order_purchase_timestamp":"2017-12-12 13:56:04","order_approved_at":"2017-12-14 13:54:13","order_delivere
+d_carrier_date":"2017-12-16 00:18:57","order_delivered_customer_date":"2018-01-03 18:03:36","order_estimated_delivery_date":"2018-01-08 00:00:00"}|
+|null|{"order_id":"8563039e855156e48fccee4d611a3196","customer_id":"5f16605299d698660e0606f7eae2d2f9","order_status":"delivered","order_purchase_timestamp":"2018-02-17 15:59:46","order_approved_at":"2018-02-17 16:15:34","order_delivere
+d_carrier_date":"2018-02-20 23:03:56","order_delivered_customer_date":"2018-03-20 00:59:25","order_estimated_delivery_date":"2018-03-20 00:00:00"}|
+|null|{"order_id":"5acce57f8d9dfd55fa48e212a641a69d","customer_id":"295ae9b35379e077273387ff64354b6f","order_status":"delivered","order_purchase_timestamp":"2017-07-31 21:37:10","order_approved_at":"2017-08-02 02:56:02","order_delivere
+d_carrier_date":"2017-08-03 18:32:48","order_delivered_customer_date":"2017-08-08 21:24:41","order_estimated_delivery_date":"2017-08-22 00:00:00"}|
+|null|{"order_id":"1e7aff52cdbb2451ace09d0f848c3699","customer_id":"ddaff536587109b89777e0353215e150","order_status":"delivered","order_purchase_timestamp":"2017-05-19 18:53:40","order_approved_at":"2017-05-19 19:05:17","order_delivere
+d_carrier_date":"2017-05-22 10:16:07","order_delivered_customer_date":"2017-05-31 13:58:46","order_estimated_delivery_date":"2017-06-12 00:00:00"}|
+|null|{"order_id":"6ebaec694d7025e2ad4a05dba887c032","customer_id":"4f28355e5c17a4a42d3ce2439a1d4501","order_status":"delivered","order_purchase_timestamp":"2017-05-18 13:55:47","order_approved_at":"2017-05-18 14:05:17","order_delivere
+d_carrier_date":"2017-05-19 12:01:38","order_delivered_customer_date":"2017-05-29 12:47:20","order_estimated_delivery_date":"2017-06-09 00:00:00"}|
+|null|{"order_id":"d17dc4a904426827ca80f2ccb3a6be56","customer_id":"569cf68214806a39acc0f39344aea67f","order_status":"delivered","order_purchase_timestamp":"2017-05-14 20:28:25","order_approved_at":"2017-05-14 20:42:45","order_delivere
+d_carrier_date":"2017-05-16 08:17:46","order_delivered_customer_date":"2017-05-25 09:14:31","order_estimated_delivery_date":"2017-06-12 00:00:00"}|
+|null|{"order_id":"5820a1100976432c7968a52da59e9364","customer_id":"2b56e94c2f66f2d97cfa63356f69cee8","order_status":"delivered","order_purchase_timestamp":"2018-07-29 11:24:17","order_approved_at":"2018-07-29 11:44:19","order_delivere
+d_carrier_date":"2018-07-30 13:47:00","order_delivered_customer_date":"2018-08-02 22:09:11","order_estimated_delivery_date":"2018-08-13 00:00:00"}|
+|null|{"order_id":"47770eb9100c2d0c44946d9cf07ec65d","customer_id":"41ce2a54c0b03bf3443c3d931a367089","order_status":"delivered","order_purchase_timestamp":"2018-08-08 08:38:49","order_approved_at":"2018-08-08 08:55:23","order_delivere
+d_carrier_date":"2018-08-08 13:50:00","order_delivered_customer_date":"2018-08-17 18:06:29","order_estimated_delivery_date":"2018-09-04 00:00:00"}|
+|null|{"order_id":"ad21c59c0840e6cb83a9ceb5573f8159","customer_id":"8ab97904e6daea8866dbdbc4fb7aad2c","order_status":"delivered","order_purchase_timestamp":"2018-02-13 21:18:39","order_approved_at":"2018-02-13 22:20:29","order_delivere
+d_carrier_date":"2018-02-14 19:46:34","order_delivered_customer_date":"2018-02-16 18:17:02","order_estimated_delivery_date":"2018-02-26 00:00:00"}|
+|null|{"order_id":"136cce7faa42fdb2cefd53fdc79a6098","customer_id":"ed0271e0b7da060a393796590e7b737a","order_status":"invoiced","order_purchase_timestamp":"2017-04-11 12:22:08","order_approved_at":"2017-04-13 13:25:17","order_delivered
+_carrier_date":"","order_delivered_customer_date":"","order_estimated_delivery_date":"2017-05-09 00:00:00"}                                       |
+|null|{"order_id":"e69bfb5eb88e0ed6a785585b27e16dbf","customer_id":"31ad1d1b63eb9962463f764d4e6e0c9d","order_status":"delivered","order_purchase_timestamp":"2017-07-29 11:55:02","order_approved_at":"2017-07-29 12:05:32","order_delivere
+d_carrier_date":"2017-08-10 19:45:24","order_delivered_customer_date":"2017-08-16 17:14:30","order_estimated_delivery_date":"2017-08-23 00:00:00"}|
++----+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------+
+only showing top 20 rows
+
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++----+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------+
+|key |value
+                                                                                                                                                  |
++----+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------+
+|null|{"order_id":"47aa4816b27ba60ec948cd019cc1afc1","customer_id":"148348ff65384b4249b762579532e248","order_status":"delivered","order_purchase_timestamp":"2018-06-26 13:42:52","order_approved_at":"2018-06-27 08:35:32","order_delivere
+d_carrier_date":"2018-06-27 13:20:00","order_delivered_customer_date":"2018-07-03 18:37:46","order_estimated_delivery_date":"2018-07-20 00:00:00"}|
+|null|{"order_id":"9faeb9b2746b9d7526aef5acb08e2aa0","customer_id":"79183cd650e2bb0d475b0067d45946ac","order_status":"delivered","order_purchase_timestamp":"2018-07-26 14:39:59","order_approved_at":"2018-07-26 14:55:10","order_delivere
+d_carrier_date":"2018-07-27 12:04:00","order_delivered_customer_date":"2018-07-31 22:26:55","order_estimated_delivery_date":"2018-08-16 00:00:00"}|
+|null|{"order_id":"641fb0752bf5b5940c376b3a8bb9dc52","customer_id":"f5afca14dfa9dc64251cf2b45c54c363","order_status":"delivered","order_purchase_timestamp":"2017-12-15 00:06:10","order_approved_at":"2017-12-15 00:14:55","order_delivere
+d_carrier_date":"2017-12-19 01:58:00","order_delivered_customer_date":"2018-01-03 15:09:32","order_estimated_delivery_date":"2018-01-16 00:00:00"}|
+|null|{"order_id":"a685d016c8a26f71a0bb67821070e398","customer_id":"911e4c37f5cafe1604fe6767034bf1ae","order_status":"delivered","order_purchase_timestamp":"2017-03-13 18:14:36","order_approved_at":"2017-03-13 18:14:36","order_delivere
+d_carrier_date":"2017-03-22 14:03:09","order_delivered_customer_date":"2017-04-06 13:37:16","order_estimated_delivery_date":"2017-03-30 00:00:00"}|
+|null|{"order_id":"f271576bed568e896f99eb710cd3a6f8","customer_id":"5dda11942d4f77bee3a46d71e442aec4","order_status":"delivered","order_purchase_timestamp":"2018-01-07 21:44:54","order_approved_at":"2018-01-07 21:51:28","order_delivere
+d_carrier_date":"2018-01-10 21:56:09","order_delivered_customer_date":"2018-01-17 20:26:31","order_estimated_delivery_date":"2018-02-14 00:00:00"}|
+|null|{"order_id":"68e48e68da1f50f7c5838ea75e3a20dd","customer_id":"4afc1dcca5fe8926fc97d60a4497f8ab","order_status":"delivered","order_purchase_timestamp":"2018-06-18 16:02:23","order_approved_at":"2018-06-18 17:00:57","order_delivere
+d_carrier_date":"2018-06-19 15:55:00","order_delivered_customer_date":"2018-06-22 21:18:51","order_estimated_delivery_date":"2018-07-13 00:00:00"}|
+|null|{"order_id":"974c1993ab8024d3ed16229183c2308d","customer_id":"a90391a47de936d56c66a5366cba1462","order_status":"delivered","order_purchase_timestamp":"2017-02-20 11:45:39","order_approved_at":"2017-02-22 03:10:20","order_delivere
+d_carrier_date":"2017-02-23 06:47:35","order_delivered_customer_date":"2017-03-09 14:27:58","order_estimated_delivery_date":"2017-03-21 00:00:00"}|
+|null|{"order_id":"bd4bd0194d6d29f83b8557d4b89b572a","customer_id":"636e15840ab051faa13d3f781b6e4233","order_status":"delivered","order_purchase_timestamp":"2018-07-28 16:52:55","order_approved_at":"2018-07-31 03:50:24","order_delivere
+d_carrier_date":"2018-08-01 16:01:00","order_delivered_customer_date":"2018-08-06 18:44:46","order_estimated_delivery_date":"2018-08-08 00:00:00"}|
+|null|{"order_id":"3bc77ce8be27211bac313c2daa402d1a","customer_id":"bf141bf67fbe428d558bcf0e018eab60","order_status":"delivered","order_purchase_timestamp":"2017-04-06 22:39:29","order_approved_at":"2017-04-06 22:50:24","order_delivere
+d_carrier_date":"2017-04-07 14:54:18","order_delivered_customer_date":"2017-04-11 12:31:36","order_estimated_delivery_date":"2017-04-27 00:00:00"}|
+|null|{"order_id":"10c320f977c6a18f91b2d14be13128c6","customer_id":"b673f0597cb0c4d12778f731045f361a","order_status":"delivered","order_purchase_timestamp":"2017-05-09 20:48:59","order_approved_at":"2017-05-09 21:02:45","order_delivere
+d_carrier_date":"2017-05-10 11:22:15","order_delivered_customer_date":"2017-05-18 13:22:35","order_estimated_delivery_date":"2017-06-01 00:00:00"}|
+|null|{"order_id":"e4de6d53ecff736bc68804b0b6e9f635","customer_id":"9f6618c17568ac301465fe7ad056c674","order_status":"delivered","order_purchase_timestamp":"2017-10-16 14:56:50","order_approved_at":"2017-10-17 03:49:34","order_delivere
+d_carrier_date":"2017-10-27 22:14:21","order_delivered_customer_date":"2017-11-08 21:25:24","order_estimated_delivery_date":"2017-11-21 00:00:00"}|
+|null|{"order_id":"6b860b35691d486e45dc98e3514ec5f6","customer_id":"fee181bf648906d1c57f84f216976286","order_status":"delivered","order_purchase_timestamp":"2017-12-08 09:42:43","order_approved_at":"2017-12-09 02:49:54","order_delivere
+d_carrier_date":"2017-12-11 15:19:04","order_delivered_customer_date":"2017-12-19 18:43:35","order_estimated_delivery_date":"2018-01-03 00:00:00"}|
+|null|{"order_id":"cadbb3657dac2dbbd5b84b12e7b78aad","customer_id":"93ada7a24817edda9f4ab998fa823d16","order_status":"delivered","order_purchase_timestamp":"2018-02-27 12:55:42","order_approved_at":"2018-03-01 02:48:54","order_delivere
+d_carrier_date":"2018-03-03 02:27:03","order_delivered_customer_date":"2018-03-16 14:59:01","order_estimated_delivery_date":"2018-03-29 00:00:00"}|
+|null|{"order_id":"0e782c3705510e717d28907746cbda82","customer_id":"3a897024068ed42a183de61d5727d866","order_status":"delivered","order_purchase_timestamp":"2018-05-01 08:12:37","order_approved_at":"2018-05-01 08:52:58","order_delivere
+d_carrier_date":"2018-05-02 19:01:00","order_delivered_customer_date":"2018-05-04 14:02:26","order_estimated_delivery_date":"2018-05-16 00:00:00"}|
+|null|{"order_id":"d3d6788577c9592da441752e8a1dd5e3","customer_id":"8628fac2267e8c8804525da99c10ed0e","order_status":"delivered","order_purchase_timestamp":"2017-09-19 22:17:15","order_approved_at":"2017-09-20 07:55:14","order_delivere
+d_carrier_date":"2017-09-22 17:23:09","order_delivered_customer_date":"2017-10-10 18:43:53","order_estimated_delivery_date":"2017-10-13 00:00:00"}|
+|null|{"order_id":"8447ff843b2616c50c0ced28ab1dae03","customer_id":"e28dd4261bed9c7ba89ecaf411b88f7c","order_status":"delivered","order_purchase_timestamp":"2017-12-20 23:45:07","order_approved_at":"2017-12-22 02:37:45","order_delivere
+d_carrier_date":"2017-12-23 13:10:45","order_delivered_customer_date":"2018-01-09 18:14:02","order_estimated_delivery_date":"2018-01-22 00:00:00"}|
+|null|{"order_id":"2ce1ad82022c1ba30c2079502ac725aa","customer_id":"7f2178c5d771e17f507d3c1637339298","order_status":"delivered","order_purchase_timestamp":"2017-08-09 20:19:05","order_approved_at":"2017-08-11 04:15:29","order_delivere
+d_carrier_date":"2017-08-11 17:52:32","order_delivered_customer_date":"2017-08-16 17:16:44","order_estimated_delivery_date":"2017-08-31 00:00:00"}|
+|null|{"order_id":"138849fd84dff2fb4ca70a0a34c4aa1c","customer_id":"9b18f3fc296990b97854e351334a32f6","order_status":"delivered","order_purchase_timestamp":"2018-02-01 14:02:19","order_approved_at":"2018-02-03 02:53:07","order_delivere
+d_carrier_date":"2018-02-06 19:13:26","order_delivered_customer_date":"2018-02-14 13:41:59","order_estimated_delivery_date":"2018-02-23 00:00:00"}|
+|null|{"order_id":"40c5e18f7d112b59b3e5113a59a905b3","customer_id":"67407057a7d5ee17d1cd09523f484d13","order_status":"delivered","order_purchase_timestamp":"2018-06-11 10:25:52","order_approved_at":"2018-06-11 10:58:32","order_delivere
+d_carrier_date":"2018-06-14 13:03:00","order_delivered_customer_date":"2018-06-19 00:31:13","order_estimated_delivery_date":"2018-07-16 00:00:00"}|
+|null|{"order_id":"f346ad4ee8f630e5e4ddaf862a34e6dd","customer_id":"dd5095632e3953fc0947b8ab5176b0be","order_status":"delivered","order_purchase_timestamp":"2018-08-05 13:09:48","order_approved_at":"2018-08-05 13:24:34","order_delivere
+d_carrier_date":"2018-08-06 13:41:00","order_delivered_customer_date":"2018-08-10 18:35:40","order_estimated_delivery_date":"2018-08-15 00:00:00"}|
++----+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------+
+only showing top 20 rows
+
+out.stop()-------------------------------------------
+Batch: 2
+-------------------------------------------
++----+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------+
+|key |value
+                                                                                                                                                  |
++----+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------+
+|null|{"order_id":"6a0a8bfbbe700284feb0845d95e0867f","customer_id":"68451b39b1314302c08c65a29f1140fc","order_status":"delivered","order_purchase_timestamp":"2017-11-22 11:32:22","order_approved_at":"2017-11-22 11:46:50","order_delivere
+d_carrier_date":"2017-11-27 13:39:35","order_delivered_customer_date":"2017-12-28 19:43:00","order_estimated_delivery_date":"2017-12-11 00:00:00"}|
+|null|{"order_id":"e3447938231fb6ba2fee0231b51eca59","customer_id":"2c3642e1392097fb4af76a76fec16a46","order_status":"delivered","order_purchase_timestamp":"2018-08-26 11:04:26","order_approved_at":"2018-08-26 11:15:29","order_delivere
+d_carrier_date":"2018-08-27 15:52:00","order_delivered_customer_date":"2018-08-28 21:06:31","order_estimated_delivery_date":"2018-08-30 00:00:00"}|
+|null|{"order_id":"e346cd9299371b18c0b28e8e29a5e376","customer_id":"fb9590a1e30e0ba8304ea73a31325797","order_status":"delivered","order_purchase_timestamp":"2017-05-17 08:36:11","order_approved_at":"2017-05-17 08:45:09","order_delivere
+d_carrier_date":"2017-05-17 10:13:52","order_delivered_customer_date":"2017-05-23 13:32:30","order_estimated_delivery_date":"2017-06-06 00:00:00"}|
+|null|{"order_id":"66d03fb3c4b0f80b5db04ef9c260336d","customer_id":"c39bde0d4030d5e31e654f0c20db9786","order_status":"delivered","order_purchase_timestamp":"2018-02-06 21:09:10","order_approved_at":"2018-02-06 21:29:40","order_delivere
+d_carrier_date":"2018-02-07 17:13:05","order_delivered_customer_date":"2018-02-16 20:24:42","order_estimated_delivery_date":"2018-03-07 00:00:00"}|
+|null|{"order_id":"a6cd683d4bd3b9b1f0aa37b27f8116d3","customer_id":"48f239e15744ed5e7ffbafc6bb6e882b","order_status":"delivered","order_purchase_timestamp":"2017-01-28 23:45:53","order_approved_at":"2017-01-29 01:31:48","order_delivere
+d_carrier_date":"2017-02-01 14:25:06","order_delivered_customer_date":"2017-02-10 17:30:19","order_estimated_delivery_date":"2017-03-10 00:00:00"}|
+|null|{"order_id":"bfe42c22ecbf90bc9f35cf591270b6a7","customer_id":"803ac05904124294f8767894d6da532b","order_status":"delivered","order_purchase_timestamp":"2018-01-27 22:04:34","order_approved_at":"2018-01-27 22:16:18","order_delivere
+d_carrier_date":"2018-02-03 03:56:00","order_delivered_customer_date":"2018-02-09 20:16:40","order_estimated_delivery_date":"2018-02-26 00:00:00"}|
+|null|{"order_id":"4da3bd761ca73d692ae0f5c252495546","customer_id":"65ee4aa816cda8ad41e05c75e1cb691e","order_status":"delivered","order_purchase_timestamp":"2018-02-01 12:31:21","order_approved_at":"2018-02-01 12:54:33","order_delivere
+d_carrier_date":"2018-02-02 00:39:31","order_delivered_customer_date":"2018-02-02 16:12:53","order_estimated_delivery_date":"2018-02-19 00:00:00"}|
+|null|{"order_id":"c75acba615d2db29345327974641467d","customer_id":"2b47ff70d422cc3ada976dea40f48782","order_status":"delivered","order_purchase_timestamp":"2018-07-06 23:36:15","order_approved_at":"2018-07-07 10:10:09","order_delivere
+d_carrier_date":"2018-07-10 14:25:00","order_delivered_customer_date":"2018-07-13 17:18:42","order_estimated_delivery_date":"2018-08-10 00:00:00"}|
+|null|{"order_id":"210e60465099814a1d2c7635e4065153","customer_id":"fc849c5fbc7e2b0c7cfebc138886c693","order_status":"delivered","order_purchase_timestamp":"2018-05-09 18:27:00","order_approved_at":"2018-05-09 18:54:13","order_delivere
+d_carrier_date":"2018-05-10 16:07:00","order_delivered_customer_date":"2018-05-22 00:08:26","order_estimated_delivery_date":"2018-05-29 00:00:00"}|
+|null|{"order_id":"f2fa3795760c35b8c05fa8e2f09d5143","customer_id":"fac60d7c4df3896a5af5db6c91e03797","order_status":"delivered","order_purchase_timestamp":"2018-03-31 14:20:46","order_approved_at":"2018-04-03 05:10:21","order_delivere
+d_carrier_date":"2018-04-05 00:44:42","order_delivered_customer_date":"2018-04-07 00:06:33","order_estimated_delivery_date":"2018-05-04 00:00:00"}|
+|null|{"order_id":"3923e3ade70348985bd2ca389905cf19","customer_id":"6454e6cba392b35aa21527063026fc92","order_status":"delivered","order_purchase_timestamp":"2018-03-07 23:00:33","order_approved_at":"2018-03-09 03:00:35","order_delivere
+d_carrier_date":"2018-03-14 02:08:26","order_delivered_customer_date":"2018-03-19 18:46:32","order_estimated_delivery_date":"2018-03-29 00:00:00"}|
+|null|{"order_id":"35660aec0cc42b6257e24281ee0e6255","customer_id":"b53cc3c992caaa45ec73cfdde4d839b5","order_status":"delivered","order_purchase_timestamp":"2017-03-30 14:46:00","order_approved_at":"2017-03-30 14:55:17","order_delivere
+d_carrier_date":"2017-04-10 18:53:49","order_delivered_customer_date":"2017-04-27 11:08:55","order_estimated_delivery_date":"2017-05-12 00:00:00"}|
+|null|{"order_id":"5164933efe0cd14f31424b9badf81f19","customer_id":"d0e71d7a6dbca8ac513ac63d08a81fa0","order_status":"delivered","order_purchase_timestamp":"2018-04-25 22:18:10","order_approved_at":"2018-04-25 22:31:56","order_delivere
+d_carrier_date":"2018-04-26 12:35:00","order_delivered_customer_date":"2018-04-27 16:50:03","order_estimated_delivery_date":"2018-05-14 00:00:00"}|
+|null|{"order_id":"65312c6e4ce03c0fb633a4ac541949d8","customer_id":"228da462edabbbc68e6d265087499705","order_status":"delivered","order_purchase_timestamp":"2018-07-22 15:19:05","order_approved_at":"2018-07-23 12:32:22","order_delivere
+d_carrier_date":"2018-07-25 10:06:00","order_delivered_customer_date":"2018-08-02 21:08:57","order_estimated_delivery_date":"2018-08-13 00:00:00"}|
+|null|{"order_id":"89165e6d4c28047da0adf13ac8b3e1b3","customer_id":"4924a47e8cd5630b3564e26fac55c5ec","order_status":"delivered","order_purchase_timestamp":"2018-07-18 13:39:54","order_approved_at":"2018-07-18 13:50:14","order_delivere
+d_carrier_date":"2018-07-24 14:14:00","order_delivered_customer_date":"2018-07-26 18:26:37","order_estimated_delivery_date":"2018-07-30 00:00:00"}|
+|null|{"order_id":"f376081d7c5f1767fbc7fae2d19ca32e","customer_id":"d68901955dc622165460ba6cb4ac49f3","order_status":"delivered","order_purchase_timestamp":"2017-03-28 16:03:34","order_approved_at":"2017-03-28 16:15:15","order_delivere
+d_carrier_date":"2017-03-29 13:23:55","order_delivered_customer_date":"2017-03-31 10:07:25","order_estimated_delivery_date":"2017-04-17 00:00:00"}|
+|null|{"order_id":"0a4a2fccb27bd83a892fa503987a595b","customer_id":"6772a0a230a2667d16c3620f000e1348","order_status":"delivered","order_purchase_timestamp":"2017-04-20 20:42:44","order_approved_at":"2017-04-20 20:55:09","order_delivere
+d_carrier_date":"2017-04-25 08:23:08","order_delivered_customer_date":"2017-05-11 13:07:46","order_estimated_delivery_date":"2017-05-25 00:00:00"}|
+|null|{"order_id":"ec341c54a5ebf8ee0a67a8632aa7579b","customer_id":"df9b032b2ad0fd6bf37dfb48e5f83845","order_status":"delivered","order_purchase_timestamp":"2017-08-26 16:53:30","order_approved_at":"2017-08-27 17:04:12","order_delivere
+d_carrier_date":"2017-08-30 13:26:32","order_delivered_customer_date":"2017-09-08 20:39:56","order_estimated_delivery_date":"2017-09-21 00:00:00"}|
+|null|{"order_id":"9defaf92cff22420e4e8ef7784815a55","customer_id":"64fb950e760ec8b0db79154a1fa9c1bf","order_status":"delivered","order_purchase_timestamp":"2018-05-11 13:10:51","order_approved_at":"2018-05-11 13:36:50","order_delivere
+d_carrier_date":"2018-05-16 14:43:00","order_delivered_customer_date":"2018-05-21 16:09:55","order_estimated_delivery_date":"2018-06-05 00:00:00"}|
+|null|{"order_id":"77e9941864fc840be8e4b1ba5347c0f7","customer_id":"3135962ee745ef39b85576df7ddbaa99","order_status":"delivered","order_purchase_timestamp":"2018-08-03 08:59:39","order_approved_at":"2018-08-03 09:31:36","order_delivere
+d_carrier_date":"2018-08-03 10:10:00","order_delivered_customer_date":"2018-08-17 00:49:41","order_estimated_delivery_date":"2018-08-27 00:00:00"}|
++----+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------+
+only showing top 20 rows
+
+out.stop()
+  File "<stdin>", line 1
+    out.stop()out.stop()
+                ^
+SyntaxError: invalid syntax
+>>> out.stop()
+>>> stream = kafka_output(kafka_json_formatted_output, 5, target_json_topic)
+>>> stream.stop()
+>>> extended_orders = parsed_orders \
+...     .withColumn("random_digit_column", F.round(F.rand() * 100)) \
+...     .withColumn("ts_column", F.current_timestamp())
+>>>
+>>>
+>>> def foreach_batch_function(df, epoch_id):
+...     print("starting epoch " + str(epoch_id))
+...     df.cache()
+...     df.filter(F.col("order_status") != "delivered"). \
+...         select("order_id", "order_status"). \
+...         show(truncate=False)
+...     df.filter(F.col("order_status") == "delivered"). \
+...         select("order_id", "order_status"). \
+...         show(truncate=False)
+...     df.unpersist()
+...     print("finishing epoch " + str(epoch_id))
+...
+>>>
+>>> def foreach_batch_sink(df, freq):
+...     return df \
+...         .writeStream \
+...         .foreachBatch(foreach_batch_function) \
+...         .trigger(processingTime='%s seconds' % freq) \
+...         .start()
+...
+>>>
+>>> stream = foreach_batch_sink(extended_orders, 20)
+>>> starting epoch 0
++--------------------------------+------------+
+|order_id                        |order_status|
++--------------------------------+------------+
+|136cce7faa42fdb2cefd53fdc79a6098|invoiced    |
++--------------------------------+------------+
+
++--------------------------------+------------+
+|order_id                        |order_status|
++--------------------------------+------------+
+|76c6e866289321a7c93b82b54852dc33|delivered   |
+|5ff96c15d0b717ac6ad1f3d77225a350|delivered   |
+|403b97836b0c04a622354cf531062e5f|delivered   |
+|116f0b09343b49556bbad5f35bee0cdf|delivered   |
+|85ce859fd6dc634de8d2f1e290444043|delivered   |
+|95266dbfb7e20354baba07964dac78d5|delivered   |
+|f3e7c359154d965827355f39d6b1fdac|delivered   |
+|fbf9ac61453ac646ce8ad9783d7d0af6|delivered   |
+|f70a0aff17df5a6cdd9a7196128bd354|delivered   |
+|989225ba6d0ebd5873335f7e01de2ae7|delivered   |
+|8563039e855156e48fccee4d611a3196|delivered   |
+|5acce57f8d9dfd55fa48e212a641a69d|delivered   |
+|1e7aff52cdbb2451ace09d0f848c3699|delivered   |
+|6ebaec694d7025e2ad4a05dba887c032|delivered   |
+|d17dc4a904426827ca80f2ccb3a6be56|delivered   |
+|5820a1100976432c7968a52da59e9364|delivered   |
+|47770eb9100c2d0c44946d9cf07ec65d|delivered   |
+|ad21c59c0840e6cb83a9ceb5573f8159|delivered   |
+|e69bfb5eb88e0ed6a785585b27e16dbf|delivered   |
+|e6ce16cb79ec1d90b1da9085a6118aeb|delivered   |
++--------------------------------+------------+
+only showing top 20 rows
+
+finishing epoch 0
+starting epoch 1
++--------------------------------+------------+
+|order_id                        |order_status|
++--------------------------------+------------+
+|ee64d42b8cf066f35eac1cf57de1aa85|shipped     |
+|0760a852e4e9d89eb77bf631eaaf1c84|invoiced    |
++--------------------------------+------------+
+
++--------------------------------+------------+
+|order_id                        |order_status|
++--------------------------------+------------+
+|47aa4816b27ba60ec948cd019cc1afc1|delivered   |
+|9faeb9b2746b9d7526aef5acb08e2aa0|delivered   |
+|641fb0752bf5b5940c376b3a8bb9dc52|delivered   |
+|a685d016c8a26f71a0bb67821070e398|delivered   |
+|f271576bed568e896f99eb710cd3a6f8|delivered   |
+|68e48e68da1f50f7c5838ea75e3a20dd|delivered   |
+|974c1993ab8024d3ed16229183c2308d|delivered   |
+|bd4bd0194d6d29f83b8557d4b89b572a|delivered   |
+|3bc77ce8be27211bac313c2daa402d1a|delivered   |
+|10c320f977c6a18f91b2d14be13128c6|delivered   |
+|e4de6d53ecff736bc68804b0b6e9f635|delivered   |
+|6b860b35691d486e45dc98e3514ec5f6|delivered   |
+|cadbb3657dac2dbbd5b84b12e7b78aad|delivered   |
+|0e782c3705510e717d28907746cbda82|delivered   |
+|d3d6788577c9592da441752e8a1dd5e3|delivered   |
+|8447ff843b2616c50c0ced28ab1dae03|delivered   |
+|2ce1ad82022c1ba30c2079502ac725aa|delivered   |
+|138849fd84dff2fb4ca70a0a34c4aa1c|delivered   |
+|40c5e18f7d112b59b3e5113a59a905b3|delivered   |
+|f346ad4ee8f630e5e4ddaf862a34e6dd|delivered   |
++--------------------------------+------------+
+only showing top 20 rows
+
+finishing epoch 1
+stream.stop()
+>>> def foreach_batch_function(df, epoch_id):
+...     print("Batch id: {} is in progress".format(epoch_id))
+...     df.cache()
+...     delivered = df.filter(F.col("order_status") == "delivered")
+...     delivered.cache()
+...     delivered.show()
+...     delivered.write.mode("append").parquet(output_path + "/delivered")
+...     print("Deliveried count: " + str(delivered.count()))
+...     delivered.unpersist()
+...     not_delivered = df.filter(F.col("order_status") != "delivered")
+...     not_delivered.cache()
+...     not_delivered.show()
+...     not_delivered.write.mode("append").parquet(output_path + "/not_delivered")
+...     print("Not delivered count: " + str(not_delivered.count()))
+...     not_delivered.unpersist()
+...     print("I FINISHED THE BATCH")
+...
+>>>
+>>> stream = foreach_batch_sink(extended_orders, 30)
+>>> Batch id: 0 is in progress
++--------------------+--------------------+------------+------------------------+-------------------+----------------------------+-----------------------------+-----------------------------+-------------------+--------------------+
+|            order_id|         customer_id|order_status|order_purchase_timestamp|  order_approved_at|order_delivered_carrier_date|order_delivered_customer_date|order_estimated_delivery_date|random_digit_column|           ts_column|
++--------------------+--------------------+------------+------------------------+-------------------+----------------------------+-----------------------------+-----------------------------+-------------------+--------------------+
+|76c6e866289321a7c...|f54a9f0e6b351c431...|   delivered|     2017-01-23 18:29:09|2017-01-25 02:50:47|         2017-01-26 14:16:31|          2017-02-02 14:08:10|          2017-03-06 00:00:00|               45.0|2021-08-12 16:09:...|
+|5ff96c15d0b717ac6...|19402a48fe860416a...|   delivered|     2018-07-25 17:44:10|2018-07-25 17:55:14|         2018-07-26 13:16:00|          2018-07-30 15:52:25|          2018-08-08 00:00:00|               46.0|2021-08-12 16:09:...|
+|403b97836b0c04a62...|738b086814c6fcc74...|   delivered|     2018-01-02 19:00:43|2018-01-02 19:09:04|         2018-01-03 18:19:09|          2018-01-20 01:38:59|          2018-02-06 00:00:00|               20.0|2021-08-12 16:09:...|
+|116f0b09343b49556...|3187789bec9909876...|   delivered|     2017-12-26 23:41:31|2017-12-26 23:50:22|         2017-12-28 18:33:05|          2018-01-08 22:36:36|          2018-01-29 00:00:00|               50.0|2021-08-12 16:09:...|
+|85ce859fd6dc634de...|059f7fc5719c7da6c...|   delivered|     2017-11-21 00:03:41|2017-11-21 00:14:22|         2017-11-23 21:32:26|          2017-11-27 18:28:00|          2017-12-11 00:00:00|               88.0|2021-08-12 16:09:...|
+|95266dbfb7e20354b...|a166da34890074091...|   delivered|     2018-01-08 07:55:29|2018-01-08 08:07:31|         2018-01-24 23:16:37|          2018-01-26 17:32:38|          2018-02-21 00:00:00|                7.0|2021-08-12 16:09:...|
+|f3e7c359154d96582...|62b423aab58096ca5...|   delivered|     2018-08-09 11:44:40|2018-08-10 03:24:51|         2018-08-10 12:29:00|          2018-08-13 18:24:27|          2018-08-17 00:00:00|               48.0|2021-08-12 16:09:...|
+|fbf9ac61453ac646c...|3a874b4d4c4b65432...|   delivered|     2018-02-20 23:46:53|2018-02-22 02:30:46|         2018-02-26 22:25:22|          2018-03-21 22:03:54|          2018-03-12 00:00:00|                9.0|2021-08-12 16:09:...|
+|f70a0aff17df5a6cd...|456dc10730fbdba34...|   delivered|     2017-08-10 11:58:33|2017-08-12 02:45:24|         2017-08-17 15:35:07|          2017-08-18 14:28:02|          2017-08-23 00:00:00|               51.0|2021-08-12 16:09:...|
+|989225ba6d0ebd587...|816f8653d5361cbf9...|   delivered|     2017-12-12 13:56:04|2017-12-14 13:54:13|         2017-12-16 00:18:57|          2018-01-03 18:03:36|          2018-01-08 00:00:00|               10.0|2021-08-12 16:09:...|
+|8563039e855156e48...|5f16605299d698660...|   delivered|     2018-02-17 15:59:46|2018-02-17 16:15:34|         2018-02-20 23:03:56|          2018-03-20 00:59:25|          2018-03-20 00:00:00|                7.0|2021-08-12 16:09:...|
+|5acce57f8d9dfd55f...|295ae9b35379e0772...|   delivered|     2017-07-31 21:37:10|2017-08-02 02:56:02|         2017-08-03 18:32:48|          2017-08-08 21:24:41|          2017-08-22 00:00:00|               78.0|2021-08-12 16:09:...|
+|1e7aff52cdbb2451a...|ddaff536587109b89...|   delivered|     2017-05-19 18:53:40|2017-05-19 19:05:17|         2017-05-22 10:16:07|          2017-05-31 13:58:46|          2017-06-12 00:00:00|               77.0|2021-08-12 16:09:...|
+|6ebaec694d7025e2a...|4f28355e5c17a4a42...|   delivered|     2017-05-18 13:55:47|2017-05-18 14:05:17|         2017-05-19 12:01:38|          2017-05-29 12:47:20|          2017-06-09 00:00:00|               75.0|2021-08-12 16:09:...|
+|d17dc4a904426827c...|569cf68214806a39a...|   delivered|     2017-05-14 20:28:25|2017-05-14 20:42:45|         2017-05-16 08:17:46|          2017-05-25 09:14:31|          2017-06-12 00:00:00|               56.0|2021-08-12 16:09:...|
+|5820a1100976432c7...|2b56e94c2f66f2d97...|   delivered|     2018-07-29 11:24:17|2018-07-29 11:44:19|         2018-07-30 13:47:00|          2018-08-02 22:09:11|          2018-08-13 00:00:00|               59.0|2021-08-12 16:09:...|
+|47770eb9100c2d0c4...|41ce2a54c0b03bf34...|   delivered|     2018-08-08 08:38:49|2018-08-08 08:55:23|         2018-08-08 13:50:00|          2018-08-17 18:06:29|          2018-09-04 00:00:00|               55.0|2021-08-12 16:09:...|
+|ad21c59c0840e6cb8...|8ab97904e6daea886...|   delivered|     2018-02-13 21:18:39|2018-02-13 22:20:29|         2018-02-14 19:46:34|          2018-02-16 18:17:02|          2018-02-26 00:00:00|               50.0|2021-08-12 16:09:...|
+|e69bfb5eb88e0ed6a...|31ad1d1b63eb99624...|   delivered|     2017-07-29 11:55:02|2017-07-29 12:05:32|         2017-08-10 19:45:24|          2017-08-16 17:14:30|          2017-08-23 00:00:00|               41.0|2021-08-12 16:09:...|
+|e6ce16cb79ec1d90b...|494dded5b201313c6...|   delivered|     2017-05-16 19:41:10|2017-05-16 19:50:18|         2017-05-18 11:40:40|          2017-05-29 11:18:31|          2017-06-07 00:00:00|               77.0|2021-08-12 16:09:...|
++--------------------+--------------------+------------+------------------------+-------------------+----------------------------+-----------------------------+-----------------------------+-------------------+--------------------+
+only showing top 20 rows
+
+Deliveried count: 47
++--------------------+--------------------+------------+------------------------+-------------------+----------------------------+-----------------------------+-----------------------------+-------------------+--------------------+
+|            order_id|         customer_id|order_status|order_purchase_timestamp|  order_approved_at|order_delivered_carrier_date|order_delivered_customer_date|order_estimated_delivery_date|random_digit_column|           ts_column|
++--------------------+--------------------+------------+------------------------+-------------------+----------------------------+-----------------------------+-----------------------------+-------------------+--------------------+
+|136cce7faa42fdb2c...|ed0271e0b7da060a3...|    invoiced|     2017-04-11 12:22:08|2017-04-13 13:25:17|                            |                             |          2017-05-09 00:00:00|                3.0|2021-08-12 16:09:...|
++--------------------+--------------------+------------+------------------------+-------------------+----------------------------+-----------------------------+-----------------------------+-------------------+--------------------+
+
+Not delivered count: 1
+I FINISHED THE BATCH
+Batch id: 1 is in progress
++--------------------+--------------------+------------+------------------------+-------------------+----------------------------+-----------------------------+-----------------------------+-------------------+--------------------+
+|            order_id|         customer_id|order_status|order_purchase_timestamp|  order_approved_at|order_delivered_carrier_date|order_delivered_customer_date|order_estimated_delivery_date|random_digit_column|           ts_column|
++--------------------+--------------------+------------+------------------------+-------------------+----------------------------+-----------------------------+-----------------------------+-------------------+--------------------+
+|47aa4816b27ba60ec...|148348ff65384b424...|   delivered|     2018-06-26 13:42:52|2018-06-27 08:35:32|         2018-06-27 13:20:00|          2018-07-03 18:37:46|          2018-07-20 00:00:00|               56.0|2021-08-12 16:10:...|
+|9faeb9b2746b9d752...|79183cd650e2bb0d4...|   delivered|     2018-07-26 14:39:59|2018-07-26 14:55:10|         2018-07-27 12:04:00|          2018-07-31 22:26:55|          2018-08-16 00:00:00|               70.0|2021-08-12 16:10:...|
+|641fb0752bf5b5940...|f5afca14dfa9dc642...|   delivered|     2017-12-15 00:06:10|2017-12-15 00:14:55|         2017-12-19 01:58:00|          2018-01-03 15:09:32|          2018-01-16 00:00:00|               67.0|2021-08-12 16:10:...|
+|a685d016c8a26f71a...|911e4c37f5cafe160...|   delivered|     2017-03-13 18:14:36|2017-03-13 18:14:36|         2017-03-22 14:03:09|          2017-04-06 13:37:16|          2017-03-30 00:00:00|               44.0|2021-08-12 16:10:...|
+|f271576bed568e896...|5dda11942d4f77bee...|   delivered|     2018-01-07 21:44:54|2018-01-07 21:51:28|         2018-01-10 21:56:09|          2018-01-17 20:26:31|          2018-02-14 00:00:00|               77.0|2021-08-12 16:10:...|
+|68e48e68da1f50f7c...|4afc1dcca5fe8926f...|   delivered|     2018-06-18 16:02:23|2018-06-18 17:00:57|         2018-06-19 15:55:00|          2018-06-22 21:18:51|          2018-07-13 00:00:00|               81.0|2021-08-12 16:10:...|
+|974c1993ab8024d3e...|a90391a47de936d56...|   delivered|     2017-02-20 11:45:39|2017-02-22 03:10:20|         2017-02-23 06:47:35|          2017-03-09 14:27:58|          2017-03-21 00:00:00|                7.0|2021-08-12 16:10:...|
+|bd4bd0194d6d29f83...|636e15840ab051faa...|   delivered|     2018-07-28 16:52:55|2018-07-31 03:50:24|         2018-08-01 16:01:00|          2018-08-06 18:44:46|          2018-08-08 00:00:00|               60.0|2021-08-12 16:10:...|
+|3bc77ce8be27211ba...|bf141bf67fbe428d5...|   delivered|     2017-04-06 22:39:29|2017-04-06 22:50:24|         2017-04-07 14:54:18|          2017-04-11 12:31:36|          2017-04-27 00:00:00|               47.0|2021-08-12 16:10:...|
+|10c320f977c6a18f9...|b673f0597cb0c4d12...|   delivered|     2017-05-09 20:48:59|2017-05-09 21:02:45|         2017-05-10 11:22:15|          2017-05-18 13:22:35|          2017-06-01 00:00:00|               26.0|2021-08-12 16:10:...|
+|e4de6d53ecff736bc...|9f6618c17568ac301...|   delivered|     2017-10-16 14:56:50|2017-10-17 03:49:34|         2017-10-27 22:14:21|          2017-11-08 21:25:24|          2017-11-21 00:00:00|               75.0|2021-08-12 16:10:...|
+|6b860b35691d486e4...|fee181bf648906d1c...|   delivered|     2017-12-08 09:42:43|2017-12-09 02:49:54|         2017-12-11 15:19:04|          2017-12-19 18:43:35|          2018-01-03 00:00:00|               89.0|2021-08-12 16:10:...|
+|cadbb3657dac2dbbd...|93ada7a24817edda9...|   delivered|     2018-02-27 12:55:42|2018-03-01 02:48:54|         2018-03-03 02:27:03|          2018-03-16 14:59:01|          2018-03-29 00:00:00|               67.0|2021-08-12 16:10:...|
+|0e782c3705510e717...|3a897024068ed42a1...|   delivered|     2018-05-01 08:12:37|2018-05-01 08:52:58|         2018-05-02 19:01:00|          2018-05-04 14:02:26|          2018-05-16 00:00:00|               61.0|2021-08-12 16:10:...|
+|d3d6788577c9592da...|8628fac2267e8c880...|   delivered|     2017-09-19 22:17:15|2017-09-20 07:55:14|         2017-09-22 17:23:09|          2017-10-10 18:43:53|          2017-10-13 00:00:00|               92.0|2021-08-12 16:10:...|
+|8447ff843b2616c50...|e28dd4261bed9c7ba...|   delivered|     2017-12-20 23:45:07|2017-12-22 02:37:45|         2017-12-23 13:10:45|          2018-01-09 18:14:02|          2018-01-22 00:00:00|               83.0|2021-08-12 16:10:...|
+|2ce1ad82022c1ba30...|7f2178c5d771e17f5...|   delivered|     2017-08-09 20:19:05|2017-08-11 04:15:29|         2017-08-11 17:52:32|          2017-08-16 17:16:44|          2017-08-31 00:00:00|               38.0|2021-08-12 16:10:...|
+|138849fd84dff2fb4...|9b18f3fc296990b97...|   delivered|     2018-02-01 14:02:19|2018-02-03 02:53:07|         2018-02-06 19:13:26|          2018-02-14 13:41:59|          2018-02-23 00:00:00|               71.0|2021-08-12 16:10:...|
+|40c5e18f7d112b59b...|67407057a7d5ee17d...|   delivered|     2018-06-11 10:25:52|2018-06-11 10:58:32|         2018-06-14 13:03:00|          2018-06-19 00:31:13|          2018-07-16 00:00:00|               60.0|2021-08-12 16:10:...|
+|f346ad4ee8f630e5e...|dd5095632e3953fc0...|   delivered|     2018-08-05 13:09:48|2018-08-05 13:24:34|         2018-08-06 13:41:00|          2018-08-10 18:35:40|          2018-08-15 00:00:00|               21.0|2021-08-12 16:10:...|
++--------------------+--------------------+------------+------------------------+-------------------+----------------------------+-----------------------------+-----------------------------+-------------------+--------------------+
+only showing top 20 rows
+
+Deliveried count: 46
++--------------------+--------------------+------------+------------------------+-------------------+----------------------------+-----------------------------+-----------------------------+-------------------+--------------------+
+|            order_id|         customer_id|order_status|order_purchase_timestamp|  order_approved_at|order_delivered_carrier_date|order_delivered_customer_date|order_estimated_delivery_date|random_digit_column|           ts_column|
++--------------------+--------------------+------------+------------------------+-------------------+----------------------------+-----------------------------+-----------------------------+-------------------+--------------------+
+|ee64d42b8cf066f35...|caded193e8e47b836...|     shipped|     2018-06-04 16:44:48|2018-06-05 04:31:18|         2018-06-05 14:32:00|                             |          2018-06-28 00:00:00|               59.0|2021-08-12 16:10:...|
+|0760a852e4e9d89eb...|d2a79636084590b74...|    invoiced|     2018-08-03 17:44:42|2018-08-07 06:15:14|                            |                             |          2018-08-21 00:00:00|               88.0|2021-08-12 16:10:...|
++--------------------+--------------------+------------+------------------------+-------------------+----------------------------+-----------------------------+-----------------------------+-------------------+--------------------+
+
+Not delivered count: 2
+I FINISHED THE BATCH
+stream.stop()
+>>>

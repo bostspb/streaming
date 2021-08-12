@@ -18,7 +18,7 @@ source_topic = "orders_topic_json"
 target_row_topic = "orders_modified_topic_row"
 target_json_topic = "orders_modified_topic_json"
 
-kafka_brokers = "bigdataanalytics2-worker-shdpt-v31-1-5:6667"
+kafka_brokers = "bigdataanalytics2-worker-shdpt-v31-1-0:6667"
 
 # read stream
 raw_orders = spark.readStream. \
