@@ -74,3 +74,14 @@
       
 **Решение** <br>
 [Ход выполнения задания](https://github.com/bostspb/streaming/blob/master/lesson05/README.md)
+
+
+### Урок 6. Lambda архитектура. Spark Streaming + Cassandra
+
+**Задание** <br>
+- Прочесть документацию (ссылка в материалах).
+- Прочитать скрипт из лекции, попутно выполняя и разбирая происходящее.
+- Приложить результат выполнения в виде pdf/ветки-в-github/документа.
+      
+**Решение** <br>
+[Ход выполнения задания](https://github.com/bostspb/streaming/blob/master/lesson06/README.md)

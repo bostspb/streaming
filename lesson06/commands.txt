@@ -1,0 +1,3 @@
+# /cassandra/bin/nodetool status        shows running cassandra instance - don't start additional if there is any
+# /cassandra/bin/cassandra              starts cassandra
+# /cassandra/bin/cqlsh                  starts SQL console

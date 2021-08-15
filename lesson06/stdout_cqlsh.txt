@@ -1,0 +1,24 @@
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /cassandra/bin/cqlsh
+Connected to Test Cluster at 127.0.0.1:9042.
+[cqlsh 5.0.1 | Cassandra 3.11.8 | CQL spec 3.4.4 | Native protocol v4]
+Use HELP for help.
+cqlsh> use streaming_student782_3;
+cqlsh:streaming_student782_3> describe tables;
+
+customer_names  customer_by_order_id
+
+cqlsh:streaming_student782_3> select * from customer_by_order_id;
+
+ oid                              | cid                              | full_name
+----------------------------------+----------------------------------+--------------------
+ f346ad4ee8f630e5e4ddaf862a34e6dd | dd5095632e3953fc0947b8ab5176b0be |   Stewart Alliston
+ 9faeb9b2746b9d7526aef5acb08e2aa0 | 79183cd650e2bb0d475b0067d45946ac |      Michael Dixon
+ e481f51cbdc54678b7cc49136f2d6af7 | 9ef432eb6251297304e76186b10a928d |      Kevin Maguire
+ 5ff96c15d0b717ac6ad1f3d77225a350 | 19402a48fe860416adf93348aba37740 |        Wanda Woods
+ 76c6e866289321a7c93b82b54852dc33 | f54a9f0e6b351c431402b8461ea51999 |         George Rae
+ 8f06cc6465925031568537b815f1198d | 9916715c2ab6ee1710c9c32f0a534ad2 | Rosemarie Haughton
+ 2edfd6d1f0b4cd0db4bf37b1b224d855 | 241e78de29b3090cfa1b5d73a8130c72 |       Russell Carr
+ 82bce245b1c9148f8d19a55b9ff70644 | 388025bec8128ff20ec1a316ed4dcf02 |     Brian Monaghan
+
+(8 rows)
+cqlsh:streaming_student782_3>
