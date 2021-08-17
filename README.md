@@ -85,3 +85,14 @@
       
 **Решение** <br>
 [Ход выполнения задания](https://github.com/bostspb/streaming/blob/master/lesson06/README.md)
+
+
+### Урок 7. Spark ML. Аналитика признаков в пакетном режиме. Подготовка, обучение ML-модели
+
+**Задание** <br>
+- Перенести скрипты на рабочую машину и запустить через spark-submit.
+- Ознакомиться с параметрами spark-submit команды.
+- (Опционально): Ознакомиться с Apache Airflow.
+      
+**Решение** <br>
+[Ход выполнения задания](https://github.com/bostspb/streaming/blob/master/lesson07/README.md)
