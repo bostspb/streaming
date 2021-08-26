@@ -1,0 +1,919 @@
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$ /spark2.4/bin/spark-submit stream.py
+Warning: Ignoring non-Spark config property: hive.metastore.uris
+21/08/26 05:36:22 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+21/08/26 05:36:23 INFO spark.SparkContext: Running Spark version 2.4.7
+21/08/26 05:36:23 INFO spark.SparkContext: Submitted application: coursework_student782_3_predict_app
+21/08/26 05:36:23 INFO spark.SecurityManager: Changing view acls to: student782_3
+21/08/26 05:36:23 INFO spark.SecurityManager: Changing modify acls to: student782_3
+21/08/26 05:36:23 INFO spark.SecurityManager: Changing view acls groups to:
+21/08/26 05:36:23 INFO spark.SecurityManager: Changing modify acls groups to:
+21/08/26 05:36:23 INFO spark.SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(student782_3); groups with view permissions: Set(); users  with modify permissions: Set(student
+782_3); groups with modify permissions: Set()
+21/08/26 05:36:24 INFO util.Utils: Successfully started service 'sparkDriver' on port 37027.
+21/08/26 05:36:24 INFO spark.SparkEnv: Registering MapOutputTracker
+21/08/26 05:36:24 INFO spark.SparkEnv: Registering BlockManagerMaster
+21/08/26 05:36:24 INFO storage.BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+21/08/26 05:36:24 INFO storage.BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+21/08/26 05:36:24 INFO storage.DiskBlockManager: Created local directory at /tmp/blockmgr-621878b8-b88a-431a-a45f-8293cfaf2fbd
+21/08/26 05:36:24 INFO memory.MemoryStore: MemoryStore started with capacity 366.3 MB
+21/08/26 05:36:24 INFO spark.SparkEnv: Registering OutputCommitCoordinator
+21/08/26 05:36:24 INFO util.log: Logging initialized @2678ms
+21/08/26 05:36:24 INFO server.Server: jetty-9.3.z-SNAPSHOT, build timestamp: unknown, git hash: unknown
+21/08/26 05:36:24 INFO server.Server: Started @2756ms
+21/08/26 05:36:24 INFO server.AbstractConnector: Started ServerConnector@2e2c2d7b{HTTP/1.1,[http/1.1]}{0.0.0.0:4040}
+21/08/26 05:36:24 INFO util.Utils: Successfully started service 'SparkUI' on port 4040.
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@551b0615{/jobs,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@38afb4b0{/jobs/json,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@331216c9{/jobs/job,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@96f8424{/jobs/job/json,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@4ca0bb8d{/stages,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@6fa7588e{/stages/json,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@38014201{/stages/stage,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@51b9524f{/stages/stage/json,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@639a1333{/stages/pool,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@7b44ee66{/stages/pool/json,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@77cecbf{/storage,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@1c4cfd35{/storage/json,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@2f7c6604{/storage/rdd,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@73179a53{/storage/rdd/json,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@136e899a{/environment,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@68306b97{/environment/json,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@24306cd3{/executors,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@6bbaaf04{/executors/json,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@c7fd9b0{/executors/threadDump,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@67f8777b{/executors/threadDump/json,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@4009d9a3{/static,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@7bc3295e{/,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@2074a430{/api,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@12a85ee2{/jobs/job/kill,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@3c42138a{/stages/stage/kill,null,AVAILABLE,@Spark}
+21/08/26 05:36:24 INFO ui.SparkUI: Bound SparkUI to 0.0.0.0, and started at http://bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:4040
+21/08/26 05:36:24 INFO executor.Executor: Starting executor ID driver on host localhost
+21/08/26 05:36:24 INFO util.Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 46439.
+21/08/26 05:36:24 INFO netty.NettyBlockTransferService: Server created on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439
+21/08/26 05:36:24 INFO storage.BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+21/08/26 05:36:24 INFO storage.BlockManagerMaster: Registering BlockManager BlockManagerId(driver, bigdataanalytics2-worker-shdpt-v31-1-0.novalocal, 46439, None)
+21/08/26 05:36:24 INFO storage.BlockManagerMasterEndpoint: Registering block manager bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 with 366.3 MB RAM, BlockManagerId(driver, bigdataanalytics2-worker-shdpt-v31-1-0.novalocal, 464
+39, None)
+21/08/26 05:36:24 INFO storage.BlockManagerMaster: Registered BlockManager BlockManagerId(driver, bigdataanalytics2-worker-shdpt-v31-1-0.novalocal, 46439, None)
+21/08/26 05:36:24 INFO storage.BlockManager: Initialized BlockManager: BlockManagerId(driver, bigdataanalytics2-worker-shdpt-v31-1-0.novalocal, 46439, None)
+21/08/26 05:36:24 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@6679d743{/metrics/json,null,AVAILABLE,@Spark}
+21/08/26 05:36:25 INFO internal.SharedState: loading hive config file: file:/spark2.4/conf/hive-site.xml
+21/08/26 05:36:25 INFO internal.SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir ('/apps/spark/warehouse').
+21/08/26 05:36:25 INFO internal.SharedState: Warehouse path is '/apps/spark/warehouse'.
+21/08/26 05:36:25 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@4b53f73c{/SQL,null,AVAILABLE,@Spark}
+21/08/26 05:36:25 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@45d750c0{/SQL/json,null,AVAILABLE,@Spark}
+21/08/26 05:36:25 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@69e145cc{/SQL/execution,null,AVAILABLE,@Spark}
+21/08/26 05:36:25 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@60de36f5{/SQL/execution/json,null,AVAILABLE,@Spark}
+21/08/26 05:36:25 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@612a29cb{/static/sql,null,AVAILABLE,@Spark}
+21/08/26 05:36:25 INFO state.StateStoreCoordinatorRef: Registered StateStoreCoordinator endpoint
+21/08/26 05:36:26 INFO memory.MemoryStore: Block broadcast_0 stored as values in memory (estimated size 309.6 KB, free 366.0 MB)
+21/08/26 05:36:26 INFO memory.MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 28.4 KB, free 366.0 MB)
+21/08/26 05:36:26 INFO storage.BlockManagerInfo: Added broadcast_0_piece0 in memory on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 (size: 28.4 KB, free: 366.3 MB)
+21/08/26 05:36:26 INFO spark.SparkContext: Created broadcast 0 from textFile at ReadWrite.scala:615
+21/08/26 05:36:26 WARN shortcircuit.DomainSocketFactory: The short-circuit local reads feature cannot be used because libhadoop cannot be loaded.
+21/08/26 05:36:27 INFO mapred.FileInputFormat: Total input paths to process : 1
+21/08/26 05:36:27 INFO spark.SparkContext: Starting job: first at ReadWrite.scala:615
+21/08/26 05:36:27 INFO scheduler.DAGScheduler: Got job 0 (first at ReadWrite.scala:615) with 1 output partitions
+21/08/26 05:36:27 INFO scheduler.DAGScheduler: Final stage: ResultStage 0 (first at ReadWrite.scala:615)
+21/08/26 05:36:27 INFO scheduler.DAGScheduler: Parents of final stage: List()
+21/08/26 05:36:27 INFO scheduler.DAGScheduler: Missing parents: List()
+21/08/26 05:36:27 INFO scheduler.DAGScheduler: Submitting ResultStage 0 (coursework/ml_data/models/model_best/metadata MapPartitionsRDD[1] at textFile at ReadWrite.scala:615), which has no missing parents
+21/08/26 05:36:27 INFO memory.MemoryStore: Block broadcast_1 stored as values in memory (estimated size 3.6 KB, free 366.0 MB)
+21/08/26 05:36:27 INFO memory.MemoryStore: Block broadcast_1_piece0 stored as bytes in memory (estimated size 2.2 KB, free 366.0 MB)
+21/08/26 05:36:27 INFO storage.BlockManagerInfo: Added broadcast_1_piece0 in memory on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 (size: 2.2 KB, free: 366.3 MB)
+21/08/26 05:36:27 INFO spark.SparkContext: Created broadcast 1 from broadcast at DAGScheduler.scala:1184
+21/08/26 05:36:27 INFO scheduler.DAGScheduler: Submitting 1 missing tasks from ResultStage 0 (coursework/ml_data/models/model_best/metadata MapPartitionsRDD[1] at textFile at ReadWrite.scala:615) (first 15 tasks are for partitions Vect
+or(0))
+21/08/26 05:36:27 INFO scheduler.TaskSchedulerImpl: Adding task set 0.0 with 1 tasks
+21/08/26 05:36:27 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0, localhost, executor driver, partition 0, ANY, 7994 bytes)
+21/08/26 05:36:27 INFO executor.Executor: Running task 0.0 in stage 0.0 (TID 0)
+21/08/26 05:36:27 INFO rdd.HadoopRDD: Input split: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/models/model_best/metadata/part-00000:0+565
+21/08/26 05:36:27 INFO executor.Executor: Finished task 0.0 in stage 0.0 (TID 0). 1364 bytes result sent to driver
+21/08/26 05:36:27 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 0.0 (TID 0) in 211 ms on localhost (executor driver) (1/1)
+21/08/26 05:36:27 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool
+21/08/26 05:36:27 INFO scheduler.DAGScheduler: ResultStage 0 (first at ReadWrite.scala:615) finished in 0.283 s
+21/08/26 05:36:27 INFO scheduler.DAGScheduler: Job 0 finished: first at ReadWrite.scala:615, took 0.345970 s
+21/08/26 05:36:27 INFO datasources.InMemoryFileIndex: It took 20 ms to list leaf files for 1 paths.
+21/08/26 05:36:27 INFO spark.SparkContext: Starting job: load at LogisticRegression.scala:1255
+21/08/26 05:36:27 INFO scheduler.DAGScheduler: Got job 1 (load at LogisticRegression.scala:1255) with 1 output partitions
+21/08/26 05:36:27 INFO scheduler.DAGScheduler: Final stage: ResultStage 1 (load at LogisticRegression.scala:1255)
+21/08/26 05:36:27 INFO scheduler.DAGScheduler: Parents of final stage: List()
+21/08/26 05:36:27 INFO scheduler.DAGScheduler: Missing parents: List()
+21/08/26 05:36:27 INFO scheduler.DAGScheduler: Submitting ResultStage 1 (MapPartitionsRDD[3] at load at LogisticRegression.scala:1255), which has no missing parents
+21/08/26 05:36:27 INFO memory.MemoryStore: Block broadcast_2 stored as values in memory (estimated size 79.2 KB, free 365.9 MB)
+21/08/26 05:36:27 INFO memory.MemoryStore: Block broadcast_2_piece0 stored as bytes in memory (estimated size 30.6 KB, free 365.9 MB)
+21/08/26 05:36:27 INFO storage.BlockManagerInfo: Added broadcast_2_piece0 in memory on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 (size: 30.6 KB, free: 366.2 MB)
+21/08/26 05:36:27 INFO spark.SparkContext: Created broadcast 2 from broadcast at DAGScheduler.scala:1184
+21/08/26 05:36:27 INFO scheduler.DAGScheduler: Submitting 1 missing tasks from ResultStage 1 (MapPartitionsRDD[3] at load at LogisticRegression.scala:1255) (first 15 tasks are for partitions Vector(0))
+21/08/26 05:36:27 INFO scheduler.TaskSchedulerImpl: Adding task set 1.0 with 1 tasks
+21/08/26 05:36:27 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 1.0 (TID 1, localhost, executor driver, partition 0, PROCESS_LOCAL, 8153 bytes)
+21/08/26 05:36:27 INFO executor.Executor: Running task 0.0 in stage 1.0 (TID 1)
+21/08/26 05:36:28 INFO executor.Executor: Finished task 0.0 in stage 1.0 (TID 1). 2283 bytes result sent to driver
+21/08/26 05:36:28 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 1.0 (TID 1) in 322 ms on localhost (executor driver) (1/1)
+21/08/26 05:36:28 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 1.0, whose tasks have all completed, from pool
+21/08/26 05:36:28 INFO scheduler.DAGScheduler: ResultStage 1 (load at LogisticRegression.scala:1255) finished in 0.344 s
+21/08/26 05:36:28 INFO scheduler.DAGScheduler: Job 1 finished: load at LogisticRegression.scala:1255, took 0.348634 s
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 44
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 27
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 30
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 46
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 49
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 11
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 16
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 22
+21/08/26 05:36:28 INFO storage.BlockManagerInfo: Removed broadcast_1_piece0 on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 in memory (size: 2.2 KB, free: 366.2 MB)
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 36
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 47
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 10
+21/08/26 05:36:28 INFO storage.BlockManagerInfo: Removed broadcast_2_piece0 on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 in memory (size: 30.6 KB, free: 366.3 MB)
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 9
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 21
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 13
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 38
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 50
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 39
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 15
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 3
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 8
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 43
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 45
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 14
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 24
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 29
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 35
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 32
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 42
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 34
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 25
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 20
+21/08/26 05:36:28 INFO storage.BlockManagerInfo: Removed broadcast_0_piece0 on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 in memory (size: 28.4 KB, free: 366.3 MB)
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 6
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 33
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 17
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 18
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 7
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 12
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 37
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 23
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 5
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 2
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 31
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 26
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 40
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 48
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 4
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 41
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 28
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 1
+21/08/26 05:36:28 INFO spark.ContextCleaner: Cleaned accumulator 19
+21/08/26 05:36:29 INFO datasources.FileSourceStrategy: Pruning directories with:
+21/08/26 05:36:29 INFO datasources.FileSourceStrategy: Post-Scan Filters:
+21/08/26 05:36:29 INFO datasources.FileSourceStrategy: Output Data Schema: struct<numClasses: int, numFeatures: int, interceptVector: vector, coefficientMatrix: matrix, isMultinomial: boolean ... 3 more fields>
+21/08/26 05:36:29 INFO execution.FileSourceScanExec: Pushed Filters:
+21/08/26 05:36:30 INFO codegen.CodeGenerator: Code generated in 252.740981 ms
+21/08/26 05:36:30 INFO codegen.CodeGenerator: Code generated in 48.049536 ms
+21/08/26 05:36:30 INFO memory.MemoryStore: Block broadcast_3 stored as values in memory (estimated size 330.3 KB, free 366.0 MB)
+21/08/26 05:36:30 INFO memory.MemoryStore: Block broadcast_3_piece0 stored as bytes in memory (estimated size 30.3 KB, free 365.9 MB)
+21/08/26 05:36:30 INFO storage.BlockManagerInfo: Added broadcast_3_piece0 in memory on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 (size: 30.3 KB, free: 366.3 MB)
+21/08/26 05:36:30 INFO spark.SparkContext: Created broadcast 3 from head at LogisticRegression.scala:1273
+21/08/26 05:36:30 INFO execution.FileSourceScanExec: Planning scan with bin packing, max size: 4194304 bytes, open cost is considered as scanning 4194304 bytes.
+21/08/26 05:36:30 INFO spark.SparkContext: Starting job: head at LogisticRegression.scala:1273
+21/08/26 05:36:30 INFO scheduler.DAGScheduler: Got job 2 (head at LogisticRegression.scala:1273) with 1 output partitions
+21/08/26 05:36:30 INFO scheduler.DAGScheduler: Final stage: ResultStage 2 (head at LogisticRegression.scala:1273)
+21/08/26 05:36:30 INFO scheduler.DAGScheduler: Parents of final stage: List()
+21/08/26 05:36:30 INFO scheduler.DAGScheduler: Missing parents: List()
+21/08/26 05:36:30 INFO scheduler.DAGScheduler: Submitting ResultStage 2 (MapPartitionsRDD[7] at head at LogisticRegression.scala:1273), which has no missing parents
+21/08/26 05:36:30 INFO memory.MemoryStore: Block broadcast_4 stored as values in memory (estimated size 16.3 KB, free 365.9 MB)
+21/08/26 05:36:30 INFO memory.MemoryStore: Block broadcast_4_piece0 stored as bytes in memory (estimated size 6.3 KB, free 365.9 MB)
+21/08/26 05:36:30 INFO storage.BlockManagerInfo: Added broadcast_4_piece0 in memory on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 (size: 6.3 KB, free: 366.3 MB)
+21/08/26 05:36:30 INFO spark.SparkContext: Created broadcast 4 from broadcast at DAGScheduler.scala:1184
+21/08/26 05:36:30 INFO scheduler.DAGScheduler: Submitting 1 missing tasks from ResultStage 2 (MapPartitionsRDD[7] at head at LogisticRegression.scala:1273) (first 15 tasks are for partitions Vector(0))
+21/08/26 05:36:30 INFO scheduler.TaskSchedulerImpl: Adding task set 2.0 with 1 tasks
+21/08/26 05:36:30 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 2.0 (TID 2, localhost, executor driver, partition 0, ANY, 8402 bytes)
+21/08/26 05:36:30 INFO executor.Executor: Running task 0.0 in stage 2.0 (TID 2)
+21/08/26 05:36:30 INFO datasources.FileScanRDD: Reading File path: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/models/model_best/data/part-00000-c72f5b7c-92de-4d86-abbf-fd9c2811fa46-c
+000.snappy.parquet, range: 0-4191, partition values: [empty row]
+21/08/26 05:36:30 INFO parquet.ParquetReadSupport: Going to read the following fields from the Parquet file:
+
+Parquet form:
+message spark_schema {
+  required int32 numClasses;
+  required int32 numFeatures;
+  optional group interceptVector {
+    required int32 type (INT_8);
+    optional int32 size;
+    optional group indices (LIST) {
+      repeated group list {
+        required int32 element;
+      }
+    }
+    optional group values (LIST) {
+      repeated group list {
+        required double element;
+      }
+    }
+  }
+  optional group coefficientMatrix {
+    required int32 type (INT_8);
+    required int32 numRows;
+    required int32 numCols;
+    optional group colPtrs (LIST) {
+      repeated group list {
+        required int32 element;
+      }
+    }
+    optional group rowIndices (LIST) {
+      repeated group list {
+        required int32 element;
+      }
+    }
+    optional group values (LIST) {
+      repeated group list {
+        required double element;
+      }
+    }
+    required boolean isTransposed;
+  }
+  required boolean isMultinomial;
+}
+
+Catalyst form:
+StructType(StructField(numClasses,IntegerType,true), StructField(numFeatures,IntegerType,true), StructField(interceptVector,org.apache.spark.ml.linalg.VectorUDT@3bfc3ba7,true), StructField(coefficientMatrix,org.apache.spark.ml.linalg.M
+atrixUDT@e59e0c69,true), StructField(isMultinomial,BooleanType,true))
+
+21/08/26 05:36:30 INFO codegen.CodeGenerator: Code generated in 60.767754 ms
+21/08/26 05:36:30 INFO codegen.CodeGenerator: Code generated in 24.074155 ms
+21/08/26 05:36:30 INFO codegen.CodeGenerator: Code generated in 32.616245 ms
+21/08/26 05:36:30 INFO hadoop.InternalParquetRecordReader: RecordReader initialized will read a total of 1 records.
+21/08/26 05:36:30 INFO hadoop.InternalParquetRecordReader: at row 0. reading next block
+21/08/26 05:36:30 INFO compress.CodecPool: Got brand-new decompressor [.snappy]
+21/08/26 05:36:30 INFO hadoop.InternalParquetRecordReader: block read in memory in 43 ms. row count = 1
+21/08/26 05:36:31 INFO executor.Executor: Finished task 0.0 in stage 2.0 (TID 2). 1320 bytes result sent to driver
+21/08/26 05:36:31 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 2.0 (TID 2) in 769 ms on localhost (executor driver) (1/1)
+21/08/26 05:36:31 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 2.0, whose tasks have all completed, from pool
+21/08/26 05:36:31 INFO scheduler.DAGScheduler: ResultStage 2 (head at LogisticRegression.scala:1273) finished in 0.803 s
+21/08/26 05:36:31 INFO scheduler.DAGScheduler: Job 2 finished: head at LogisticRegression.scala:1273, took 0.814041 s
+21/08/26 05:36:31 INFO datasources.InMemoryFileIndex: It took 23 ms to list leaf files for 3 paths.
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 60
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 77
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 63
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 69
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 74
+21/08/26 05:36:31 INFO storage.BlockManagerInfo: Removed broadcast_4_piece0 on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 in memory (size: 6.3 KB, free: 366.3 MB)
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 53
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 62
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 59
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 55
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 68
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 66
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 51
+21/08/26 05:36:31 INFO storage.BlockManagerInfo: Removed broadcast_3_piece0 on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 in memory (size: 30.3 KB, free: 366.3 MB)
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 70
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 76
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 67
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 73
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 65
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 75
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 52
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 61
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 54
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 80
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 64
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 72
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 78
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 79
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 56
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 58
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 71
+21/08/26 05:36:31 INFO spark.ContextCleaner: Cleaned accumulator 57
+21/08/26 05:36:31 INFO streaming.CheckpointFileManager: Writing atomically to hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/metadata using temp file hdfs://bigdataanalytic
+s2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/.metadata.c2ebf673-7940-48b5-89d0-81368dacfd84.tmp
+21/08/26 05:36:31 INFO streaming.CheckpointFileManager: Renamed temp file hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/.metadata.c2ebf673-7940-48b5-89d0-81368dacfd84.tmp
+to hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/metadata
+21/08/26 05:36:31 INFO streaming.MicroBatchExecution: Starting [id = 5ad776f2-b994-4c12-8995-88b7e1e3d667, runId = 0dd84be3-f175-43a5-a492-7ef0e9ab9b79]. Use hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/
+tmp/ml_checkpoint/20210826053631 to store the query checkpoint.
+21/08/26 05:36:31 INFO streaming.FileStreamSourceLog: Set the compact interval to 10 [defaultCompactInterval: 10]
+21/08/26 05:36:31 INFO streaming.FileStreamSource: maxFilesPerBatch = Some(1), maxFileAgeMs = 604800000
+21/08/26 05:36:31 INFO streaming.MicroBatchExecution: Using Source [FileStreamSource[hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/*]] from DataSourceV1 named 'FileSource[coursework/ml_
+data/*]' [DataSource(org.apache.spark.sql.SparkSession@367efa11,csv,List(),Some(StructType(StructField(credit_policy,IntegerType,true), StructField(purpose,StringType,true), StructField(int_rate,DoubleType,true), StructField(installmen
+t,DoubleType,true), StructField(log_annual_inc,DoubleType,true), StructField(dti,DoubleType,true), StructField(fico,IntegerType,true), StructField(days_with_cr_line,DoubleType,true), StructField(revol_bal,IntegerType,true), StructField
+(revol_util,DoubleType,true), StructField(inq_last_6mths,IntegerType,true), StructField(delinq_2yrs,IntegerType,true), StructField(pub_rec,IntegerType,true), StructField(not_fully_paid,IntegerType,true))),List(),None,Map(header -> true
+, maxFilesPerTrigger -> 1, path -> coursework/ml_data/*),None)]
+21/08/26 05:36:31 INFO streaming.MicroBatchExecution: Starting new streaming query.
+21/08/26 05:36:31 INFO streaming.MicroBatchExecution: Stream started from {}
+21/08/26 05:36:31 INFO datasources.InMemoryFileIndex: It took 20 ms to list leaf files for 3 paths.
+21/08/26 05:36:31 INFO streaming.CheckpointFileManager: Writing atomically to hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/sources/0/0 using temp file hdfs://bigdataanaly
+tics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/sources/0/.0.97334559-15db-4f5e-ae87-b0bde23f94a1.tmp
+21/08/26 05:36:31 INFO streaming.CheckpointFileManager: Renamed temp file hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/sources/0/.0.97334559-15db-4f5e-ae87-b0bde23f94a1.t
+mp to hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/sources/0/0
+21/08/26 05:36:31 INFO streaming.FileStreamSource: Log offset set to 0 with 1 new files
+21/08/26 05:36:31 INFO streaming.CheckpointFileManager: Writing atomically to hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/offsets/0 using temp file hdfs://bigdataanalyti
+cs2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/offsets/.0.298b24fd-26c4-4dd7-906f-6ecb3d3379cb.tmp
+21/08/26 05:36:32 INFO streaming.CheckpointFileManager: Renamed temp file hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/offsets/.0.298b24fd-26c4-4dd7-906f-6ecb3d3379cb.tmp
+ to hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/offsets/0
+21/08/26 05:36:32 INFO streaming.MicroBatchExecution: Committed offsets for batch 0. Metadata OffsetSeqMetadata(0,1629956191952,Map(spark.sql.streaming.stateStore.providerClass -> org.apache.spark.sql.execution.streaming.state.HDFSBack
+edStateStoreProvider, spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion -> 2, spark.sql.streaming.multipleWatermarkPolicy -> min, spark.sql.streaming.aggregation.stateFormatVersion -> 2, spark.sql.shuffle.partitions -> 200)
+)
+21/08/26 05:36:32 INFO streaming.FileStreamSource: Processing 1 files from 0:0
+21/08/26 05:36:32 INFO datasources.InMemoryFileIndex: It took 4 ms to list leaf files for 1 paths.
+21/08/26 05:36:32 INFO datasources.FileSourceStrategy: Pruning directories with:
+21/08/26 05:36:32 INFO datasources.FileSourceStrategy: Post-Scan Filters:
+21/08/26 05:36:32 INFO datasources.FileSourceStrategy: Output Data Schema: struct<credit_policy: int, purpose: string, int_rate: double, installment: double, log_annual_inc: double ... 12 more fields>
+21/08/26 05:36:32 INFO execution.FileSourceScanExec: Pushed Filters:
+21/08/26 05:36:32 INFO codegen.CodeGenerator: Code generated in 6.489249 ms
+21/08/26 05:36:32 INFO memory.MemoryStore: Block broadcast_5 stored as values in memory (estimated size 320.1 KB, free 366.0 MB)
+21/08/26 05:36:32 INFO memory.MemoryStore: Block broadcast_5_piece0 stored as bytes in memory (estimated size 29.1 KB, free 366.0 MB)
+21/08/26 05:36:32 INFO storage.BlockManagerInfo: Added broadcast_5_piece0 in memory on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 (size: 29.1 KB, free: 366.3 MB)
+21/08/26 05:36:32 INFO spark.SparkContext: Created broadcast 5 from start at NativeMethodAccessorImpl.java:0
+21/08/26 05:36:32 INFO execution.FileSourceScanExec: Planning scan with bin packing, max size: 4194304 bytes, open cost is considered as scanning 4194304 bytes.
+21/08/26 05:36:32 INFO codegen.CodeGenerator: Code generated in 31.9567 ms
+21/08/26 05:36:32 INFO spark.SparkContext: Starting job: countByValue at StringIndexer.scala:140
+21/08/26 05:36:32 INFO scheduler.DAGScheduler: Registering RDD 19 (countByValue at StringIndexer.scala:140) as input to shuffle 0
+21/08/26 05:36:32 INFO scheduler.DAGScheduler: Got job 3 (countByValue at StringIndexer.scala:140) with 1 output partitions
+21/08/26 05:36:32 INFO scheduler.DAGScheduler: Final stage: ResultStage 4 (countByValue at StringIndexer.scala:140)
+21/08/26 05:36:32 INFO scheduler.DAGScheduler: Parents of final stage: List(ShuffleMapStage 3)
+21/08/26 05:36:32 INFO scheduler.DAGScheduler: Missing parents: List(ShuffleMapStage 3)
+21/08/26 05:36:32 INFO scheduler.DAGScheduler: Submitting ShuffleMapStage 3 (MapPartitionsRDD[19] at countByValue at StringIndexer.scala:140), which has no missing parents
+21/08/26 05:36:32 INFO memory.MemoryStore: Block broadcast_6 stored as values in memory (estimated size 31.6 KB, free 365.9 MB)
+21/08/26 05:36:32 INFO memory.MemoryStore: Block broadcast_6_piece0 stored as bytes in memory (estimated size 13.4 KB, free 365.9 MB)
+21/08/26 05:36:32 INFO storage.BlockManagerInfo: Added broadcast_6_piece0 in memory on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 (size: 13.4 KB, free: 366.3 MB)
+21/08/26 05:36:32 INFO spark.SparkContext: Created broadcast 6 from broadcast at DAGScheduler.scala:1184
+21/08/26 05:36:32 INFO scheduler.DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 3 (MapPartitionsRDD[19] at countByValue at StringIndexer.scala:140) (first 15 tasks are for partitions Vector(0))
+21/08/26 05:36:32 INFO scheduler.TaskSchedulerImpl: Adding task set 3.0 with 1 tasks
+21/08/26 05:36:32 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 3.0 (TID 3, localhost, executor driver, partition 0, ANY, 8314 bytes)
+21/08/26 05:36:32 INFO executor.Executor: Running task 0.0 in stage 3.0 (TID 3)
+21/08/26 05:36:32 INFO codegen.CodeGenerator: Code generated in 8.037391 ms
+21/08/26 05:36:32 INFO datasources.FileScanRDD: Reading File path: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv, range: 0-751253, partition values: [empty row]
+21/08/26 05:36:32 INFO codegen.CodeGenerator: Code generated in 16.65067 ms
+21/08/26 05:36:32 WARN csv.CSVDataSource: CSV header does not conform to the schema.
+ Header: credit.policy, purpose, int.rate, installment, log.annual.inc, dti, fico, days.with.cr.line, revol.bal, revol.util, inq.last.6mths, delinq.2yrs, pub.rec, not.fully.paid
+ Schema: credit_policy, purpose, int_rate, installment, log_annual_inc, dti, fico, days_with_cr_line, revol_bal, revol_util, inq_last_6mths, delinq_2yrs, pub_rec, not_fully_paid
+Expected: credit_policy but found: credit.policy
+CSV file: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv
+21/08/26 05:36:33 INFO codegen.CodeGenerator: Code generated in 13.347148 ms
+21/08/26 05:36:33 INFO executor.Executor: Finished task 0.0 in stage 3.0 (TID 3). 1759 bytes result sent to driver
+21/08/26 05:36:33 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 3.0 (TID 3) in 406 ms on localhost (executor driver) (1/1)
+21/08/26 05:36:33 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 3.0, whose tasks have all completed, from pool
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: ShuffleMapStage 3 (countByValue at StringIndexer.scala:140) finished in 0.477 s
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: looking for newly runnable stages
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: running: Set()
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: waiting: Set(ResultStage 4)
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: failed: Set()
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: Submitting ResultStage 4 (ShuffledRDD[20] at countByValue at StringIndexer.scala:140), which has no missing parents
+21/08/26 05:36:33 INFO memory.MemoryStore: Block broadcast_7 stored as values in memory (estimated size 3.4 KB, free 365.9 MB)
+21/08/26 05:36:33 INFO memory.MemoryStore: Block broadcast_7_piece0 stored as bytes in memory (estimated size 2.0 KB, free 365.9 MB)
+21/08/26 05:36:33 INFO storage.BlockManagerInfo: Added broadcast_7_piece0 in memory on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 (size: 2.0 KB, free: 366.3 MB)
+21/08/26 05:36:33 INFO spark.SparkContext: Created broadcast 7 from broadcast at DAGScheduler.scala:1184
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: Submitting 1 missing tasks from ResultStage 4 (ShuffledRDD[20] at countByValue at StringIndexer.scala:140) (first 15 tasks are for partitions Vector(0))
+21/08/26 05:36:33 INFO scheduler.TaskSchedulerImpl: Adding task set 4.0 with 1 tasks
+21/08/26 05:36:33 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 4.0 (TID 4, localhost, executor driver, partition 0, ANY, 7662 bytes)
+21/08/26 05:36:33 INFO executor.Executor: Running task 0.0 in stage 4.0 (TID 4)
+21/08/26 05:36:33 INFO storage.ShuffleBlockFetcherIterator: Getting 1 non-empty blocks including 1 local blocks and 0 remote blocks
+21/08/26 05:36:33 INFO storage.ShuffleBlockFetcherIterator: Started 0 remote fetches in 6 ms
+21/08/26 05:36:33 INFO executor.Executor: Finished task 0.0 in stage 4.0 (TID 4). 1514 bytes result sent to driver
+21/08/26 05:36:33 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 4.0 (TID 4) in 60 ms on localhost (executor driver) (1/1)
+21/08/26 05:36:33 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 4.0, whose tasks have all completed, from pool
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: ResultStage 4 (countByValue at StringIndexer.scala:140) finished in 0.068 s
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: Job 3 finished: countByValue at StringIndexer.scala:140, took 0.766736 s
+struct<credit_policy:int,purpose:string,int_rate:double,installment:double,log_annual_inc:double,dti:double,purpose_index:double>
+21/08/26 05:36:33 INFO codegen.CodeGenerator: Code generated in 12.135341 ms
+21/08/26 05:36:33 INFO codegen.CodeGenerator: Code generated in 30.206113 ms
+21/08/26 05:36:33 INFO spark.SparkContext: Starting job: showString at NativeMethodAccessorImpl.java:0
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: Got job 4 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: Final stage: ResultStage 5 (showString at NativeMethodAccessorImpl.java:0)
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: Parents of final stage: List()
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: Missing parents: List()
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: Submitting ResultStage 5 (MapPartitionsRDD[24] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+21/08/26 05:36:33 INFO memory.MemoryStore: Block broadcast_8 stored as values in memory (estimated size 40.9 KB, free 365.9 MB)
+21/08/26 05:36:33 INFO memory.MemoryStore: Block broadcast_8_piece0 stored as bytes in memory (estimated size 15.9 KB, free 365.9 MB)
+21/08/26 05:36:33 INFO storage.BlockManagerInfo: Added broadcast_8_piece0 in memory on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 (size: 15.9 KB, free: 366.2 MB)
+21/08/26 05:36:33 INFO spark.SparkContext: Created broadcast 8 from broadcast at DAGScheduler.scala:1184
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: Submitting 1 missing tasks from ResultStage 5 (MapPartitionsRDD[24] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+21/08/26 05:36:33 INFO scheduler.TaskSchedulerImpl: Adding task set 5.0 with 1 tasks
+21/08/26 05:36:33 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 5.0 (TID 5, localhost, executor driver, partition 0, ANY, 8325 bytes)
+21/08/26 05:36:33 INFO executor.Executor: Running task 0.0 in stage 5.0 (TID 5)
+21/08/26 05:36:33 INFO datasources.FileScanRDD: Reading File path: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv, range: 0-751253, partition values: [empty row]
+21/08/26 05:36:33 WARN csv.CSVDataSource: CSV header does not conform to the schema.
+ Header: credit.policy, purpose, int.rate, installment, log.annual.inc, dti, fico, days.with.cr.line, revol.bal, revol.util, inq.last.6mths, delinq.2yrs, pub.rec, not.fully.paid
+ Schema: credit_policy, purpose, int_rate, installment, log_annual_inc, dti, fico, days_with_cr_line, revol_bal, revol_util, inq_last_6mths, delinq_2yrs, pub_rec, not_fully_paid
+Expected: credit_policy but found: credit.policy
+CSV file: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv
+21/08/26 05:36:33 INFO executor.Executor: Finished task 0.0 in stage 5.0 (TID 5). 1654 bytes result sent to driver
+21/08/26 05:36:33 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 5.0 (TID 5) in 36 ms on localhost (executor driver) (1/1)
+21/08/26 05:36:33 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 5.0, whose tasks have all completed, from pool
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: ResultStage 5 (showString at NativeMethodAccessorImpl.java:0) finished in 0.049 s
+21/08/26 05:36:33 INFO scheduler.DAGScheduler: Job 4 finished: showString at NativeMethodAccessorImpl.java:0, took 0.052108 s
++-------------+------------------+--------+-----------+--------------+-----+-------------+
+|credit_policy|           purpose|int_rate|installment|log_annual_inc|  dti|purpose_index|
++-------------+------------------+--------+-----------+--------------+-----+-------------+
+|            1|debt_consolidation|  0.1189|      829.1|   11.35040654|19.48|          0.0|
+|            1|       credit_card|  0.1071|     228.22|   11.08214255|14.29|          2.0|
+|            1|debt_consolidation|  0.1357|     366.86|   10.37349118|11.63|          0.0|
++-------------+------------------+--------+-----------+--------------+-----+-------------+
+only showing top 3 rows
+
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 95
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 88
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 153
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 132
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 146
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 86
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 101
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 159
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 161
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 144
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 141
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 96
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 117
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 123
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 130
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 107
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 127
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 110
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 154
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 92
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 115
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned shuffle 0
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 138
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 104
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 113
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 143
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 155
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 165
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 94
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 121
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 122
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 136
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 151
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 126
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 145
+21/08/26 05:36:34 INFO storage.BlockManagerInfo: Removed broadcast_7_piece0 on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 in memory (size: 2.0 KB, free: 366.2 MB)
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 148
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 152
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 160
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 114
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 156
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 99
+21/08/26 05:36:34 INFO storage.BlockManagerInfo: Removed broadcast_6_piece0 on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 in memory (size: 13.4 KB, free: 366.3 MB)
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 125
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 91
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 119
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 109
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 106
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 139
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 140
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 103
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 118
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 116
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 163
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 111
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 128
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 98
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 137
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 102
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 149
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 133
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 87
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 120
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 135
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 129
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 112
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 131
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 90
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 100
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 147
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 97
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 108
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 134
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 142
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 157
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 105
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 162
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 164
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 158
+21/08/26 05:36:34 INFO storage.BlockManagerInfo: Removed broadcast_8_piece0 on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 in memory (size: 15.9 KB, free: 366.3 MB)
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 93
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 150
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 124
+21/08/26 05:36:34 INFO spark.ContextCleaner: Cleaned accumulator 89
+21/08/26 05:36:34 INFO codegen.CodeGenerator: Code generated in 8.86824 ms
+21/08/26 05:36:34 INFO codegen.CodeGenerator: Code generated in 38.436499 ms
+21/08/26 05:36:34 INFO spark.SparkContext: Starting job: showString at NativeMethodAccessorImpl.java:0
+21/08/26 05:36:34 INFO scheduler.DAGScheduler: Got job 5 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+21/08/26 05:36:34 INFO scheduler.DAGScheduler: Final stage: ResultStage 6 (showString at NativeMethodAccessorImpl.java:0)
+21/08/26 05:36:34 INFO scheduler.DAGScheduler: Parents of final stage: List()
+21/08/26 05:36:34 INFO scheduler.DAGScheduler: Missing parents: List()
+21/08/26 05:36:34 INFO scheduler.DAGScheduler: Submitting ResultStage 6 (MapPartitionsRDD[28] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+21/08/26 05:36:34 INFO memory.MemoryStore: Block broadcast_9 stored as values in memory (estimated size 61.0 KB, free 365.9 MB)
+21/08/26 05:36:34 INFO memory.MemoryStore: Block broadcast_9_piece0 stored as bytes in memory (estimated size 22.4 KB, free 365.9 MB)
+21/08/26 05:36:34 INFO storage.BlockManagerInfo: Added broadcast_9_piece0 in memory on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 (size: 22.4 KB, free: 366.2 MB)
+21/08/26 05:36:34 INFO spark.SparkContext: Created broadcast 9 from broadcast at DAGScheduler.scala:1184
+21/08/26 05:36:34 INFO scheduler.DAGScheduler: Submitting 1 missing tasks from ResultStage 6 (MapPartitionsRDD[28] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+21/08/26 05:36:34 INFO scheduler.TaskSchedulerImpl: Adding task set 6.0 with 1 tasks
+21/08/26 05:36:34 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 6.0 (TID 6, localhost, executor driver, partition 0, ANY, 8325 bytes)
+21/08/26 05:36:34 INFO executor.Executor: Running task 0.0 in stage 6.0 (TID 6)
+21/08/26 05:36:34 INFO datasources.FileScanRDD: Reading File path: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv, range: 0-751253, partition values: [empty row]
+21/08/26 05:36:34 WARN csv.CSVDataSource: CSV header does not conform to the schema.
+ Header: credit.policy, purpose, int.rate, installment, log.annual.inc, dti, fico, days.with.cr.line, revol.bal, revol.util, inq.last.6mths, delinq.2yrs, pub.rec, not.fully.paid
+ Schema: credit_policy, purpose, int_rate, installment, log_annual_inc, dti, fico, days_with_cr_line, revol_bal, revol_util, inq_last_6mths, delinq_2yrs, pub_rec, not_fully_paid
+Expected: credit_policy but found: credit.policy
+CSV file: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv
+21/08/26 05:36:34 WARN netlib.BLAS: Failed to load implementation from: com.github.fommil.netlib.NativeSystemBLAS
+21/08/26 05:36:34 WARN netlib.BLAS: Failed to load implementation from: com.github.fommil.netlib.NativeRefBLAS
+21/08/26 05:36:34 INFO executor.Executor: Finished task 0.0 in stage 6.0 (TID 6). 3527 bytes result sent to driver
+21/08/26 05:36:34 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 6.0 (TID 6) in 61 ms on localhost (executor driver) (1/1)
+21/08/26 05:36:34 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 6.0, whose tasks have all completed, from pool
+21/08/26 05:36:34 INFO scheduler.DAGScheduler: ResultStage 6 (showString at NativeMethodAccessorImpl.java:0) finished in 0.075 s
+21/08/26 05:36:34 INFO scheduler.DAGScheduler: Job 5 finished: showString at NativeMethodAccessorImpl.java:0, took 0.082162 s
++--------------------+--------------------+--------------------+----------+
+|            features|       rawPrediction|         probability|prediction|
++--------------------+--------------------+--------------------+----------+
+|[1.0,0.1189,829.1...|[1.81093374432128...|[0.85947468784821...|       0.0|
+|[1.0,0.1071,228.2...|[2.09307647805301...|[0.89022842565797...|       0.0|
+|[1.0,0.1357,366.8...|[1.69508836032221...|[0.84489215729377...|       0.0|
+|[1.0,0.1008,162.3...|[2.35163699703770...|[0.91306425687395...|       0.0|
+|[1.0,0.1426,102.9...|[1.73271726517562...|[0.84975965835534...|       0.0|
+|[1.0,0.0788,125.1...|[2.59314662189928...|[0.93041920335587...|       0.0|
+|[1.0,0.1496,194.0...|[1.65348886328109...|[0.83936202293034...|       0.0|
+|[1.0,0.1114,131.2...|[2.13091876523582...|[0.89387219825124...|       0.0|
+|[1.0,0.1134,87.19...|[2.06094592327987...|[0.88704897960628...|       0.0|
+|[1.0,0.1221,84.12...|[1.97199199814258...|[0.87782491250239...|       0.0|
+|[1.0,0.1347,360.4...|[1.70277463876364...|[0.84589677135581...|       0.0|
+|[1.0,0.1324,253.5...|[1.97658162598046...|[0.87831628950104...|       0.0|
+|[1.0,0.0859,316.1...|[2.40487380219801...|[0.91719820106294...|       0.0|
+|[1.0,0.0714,92.82...|[2.55823155896503...|[0.92812457546896...|       0.0|
+|[1.0,0.0863,209.5...|[2.27204537093051...|[0.90653523436999...|       0.0|
+|[1.0,0.1103,327.5...|[1.80604917696249...|[0.85888370329992...|       0.0|
+|[1.0,0.1317,77.69...|[1.85344879959314...|[0.86453152328935...|       0.0|
+|[1.0,0.0894,476.5...|[2.28054766384156...|[0.90725314027034...|       0.0|
+|[1.0,0.1039,584.1...|[2.02136570579755...|[0.88302215219049...|       0.0|
+|[1.0,0.1513,173.6...|[1.41177596373534...|[0.80404590862863...|       0.0|
++--------------------+--------------------+--------------------+----------+
+only showing top 20 rows
+
+21/08/26 05:36:34 INFO parquet.ParquetFileFormat: Using default output committer for Parquet: org.apache.parquet.hadoop.ParquetOutputCommitter
+21/08/26 05:36:34 INFO datasources.SQLHadoopMapReduceCommitProtocol: Using user defined output committer class org.apache.parquet.hadoop.ParquetOutputCommitter
+21/08/26 05:36:34 INFO datasources.SQLHadoopMapReduceCommitProtocol: Using output committer class org.apache.parquet.hadoop.ParquetOutputCommitter
+21/08/26 05:36:34 INFO codegen.CodeGenerator: Code generated in 41.833054 ms
+21/08/26 05:36:34 INFO spark.SparkContext: Starting job: parquet at NativeMethodAccessorImpl.java:0
+21/08/26 05:36:34 INFO scheduler.DAGScheduler: Got job 6 (parquet at NativeMethodAccessorImpl.java:0) with 1 output partitions
+21/08/26 05:36:34 INFO scheduler.DAGScheduler: Final stage: ResultStage 7 (parquet at NativeMethodAccessorImpl.java:0)
+21/08/26 05:36:34 INFO scheduler.DAGScheduler: Parents of final stage: List()
+21/08/26 05:36:34 INFO scheduler.DAGScheduler: Missing parents: List()
+21/08/26 05:36:34 INFO scheduler.DAGScheduler: Submitting ResultStage 7 (MapPartitionsRDD[30] at parquet at NativeMethodAccessorImpl.java:0), which has no missing parents
+21/08/26 05:36:34 INFO memory.MemoryStore: Block broadcast_10 stored as values in memory (estimated size 230.1 KB, free 365.7 MB)
+21/08/26 05:36:34 INFO memory.MemoryStore: Block broadcast_10_piece0 stored as bytes in memory (estimated size 84.4 KB, free 365.6 MB)
+21/08/26 05:36:34 INFO storage.BlockManagerInfo: Added broadcast_10_piece0 in memory on bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:46439 (size: 84.4 KB, free: 366.2 MB)
+21/08/26 05:36:34 INFO spark.SparkContext: Created broadcast 10 from broadcast at DAGScheduler.scala:1184
+21/08/26 05:36:34 INFO scheduler.DAGScheduler: Submitting 1 missing tasks from ResultStage 7 (MapPartitionsRDD[30] at parquet at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+21/08/26 05:36:34 INFO scheduler.TaskSchedulerImpl: Adding task set 7.0 with 1 tasks
+21/08/26 05:36:34 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 7.0 (TID 7, localhost, executor driver, partition 0, ANY, 8325 bytes)
+21/08/26 05:36:34 INFO executor.Executor: Running task 0.0 in stage 7.0 (TID 7)
+21/08/26 05:36:34 INFO datasources.SQLHadoopMapReduceCommitProtocol: Using user defined output committer class org.apache.parquet.hadoop.ParquetOutputCommitter
+21/08/26 05:36:34 INFO datasources.SQLHadoopMapReduceCommitProtocol: Using output committer class org.apache.parquet.hadoop.ParquetOutputCommitter
+21/08/26 05:36:34 INFO codec.CodecConfig: Compression: SNAPPY
+21/08/26 05:36:34 INFO codec.CodecConfig: Compression: SNAPPY
+21/08/26 05:36:34 INFO hadoop.ParquetOutputFormat: Parquet block size to 134217728
+21/08/26 05:36:34 INFO hadoop.ParquetOutputFormat: Parquet page size to 1048576
+21/08/26 05:36:34 INFO hadoop.ParquetOutputFormat: Parquet dictionary page size to 1048576
+21/08/26 05:36:34 INFO hadoop.ParquetOutputFormat: Dictionary is on
+21/08/26 05:36:34 INFO hadoop.ParquetOutputFormat: Validation is off
+21/08/26 05:36:34 INFO hadoop.ParquetOutputFormat: Writer version is: PARQUET_1_0
+21/08/26 05:36:34 INFO hadoop.ParquetOutputFormat: Maximum row group padding size is 8388608 bytes
+21/08/26 05:36:34 INFO hadoop.ParquetOutputFormat: Page size checking is: estimated
+21/08/26 05:36:34 INFO hadoop.ParquetOutputFormat: Min row count for page size check is: 100
+21/08/26 05:36:34 INFO hadoop.ParquetOutputFormat: Max row count for page size check is: 10000
+21/08/26 05:36:34 INFO parquet.ParquetWriteSupport: Initialized Parquet WriteSupport with Catalyst schema:
+{
+  "type" : "struct",
+  "fields" : [ {
+    "name" : "features",
+    "type" : {
+      "type" : "udt",
+      "class" : "org.apache.spark.ml.linalg.VectorUDT",
+      "pyClass" : "pyspark.ml.linalg.VectorUDT",
+      "sqlType" : {
+        "type" : "struct",
+        "fields" : [ {
+          "name" : "type",
+          "type" : "byte",
+          "nullable" : false,
+          "metadata" : { }
+        }, {
+          "name" : "size",
+          "type" : "integer",
+          "nullable" : true,
+          "metadata" : { }
+        }, {
+          "name" : "indices",
+          "type" : {
+            "type" : "array",
+            "elementType" : "integer",
+            "containsNull" : false
+          },
+          "nullable" : true,
+          "metadata" : { }
+        }, {
+          "name" : "values",
+          "type" : {
+            "type" : "array",
+            "elementType" : "double",
+            "containsNull" : false
+          },
+          "nullable" : true,
+          "metadata" : { }
+        } ]
+      }
+    },
+    "nullable" : true,
+    "metadata" : {
+      "ml_attr" : {
+        "attrs" : {
+          "numeric" : [ {
+            "idx" : 0,
+            "name" : "credit_policy"
+          }, {
+            "idx" : 1,
+            "name" : "int_rate"
+          }, {
+            "idx" : 2,
+            "name" : "installment"
+          }, {
+            "idx" : 3,
+            "name" : "log_annual_inc"
+          }, {
+            "idx" : 4,
+            "name" : "dti"
+          } ],
+          "nominal" : [ {
+            "vals" : [ "debt_consolidation", "all_other", "credit_card", "home_improvement", "small_business", "major_purchase", "educational", "__unknown" ],
+            "idx" : 5,
+            "name" : "purpose_index"
+          } ]
+        },
+        "num_attrs" : 6
+      }
+    }
+  }, {
+    "name" : "rawPrediction",
+    "type" : {
+      "type" : "udt",
+      "class" : "org.apache.spark.ml.linalg.VectorUDT",
+      "pyClass" : "pyspark.ml.linalg.VectorUDT",
+      "sqlType" : {
+        "type" : "struct",
+        "fields" : [ {
+          "name" : "type",
+          "type" : "byte",
+          "nullable" : false,
+          "metadata" : { }
+        }, {
+          "name" : "size",
+          "type" : "integer",
+          "nullable" : true,
+          "metadata" : { }
+        }, {
+          "name" : "indices",
+          "type" : {
+            "type" : "array",
+            "elementType" : "integer",
+            "containsNull" : false
+          },
+          "nullable" : true,
+          "metadata" : { }
+        }, {
+          "name" : "values",
+          "type" : {
+            "type" : "array",
+            "elementType" : "double",
+            "containsNull" : false
+          },
+          "nullable" : true,
+          "metadata" : { }
+        } ]
+      }
+    },
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "probability",
+    "type" : {
+      "type" : "udt",
+      "class" : "org.apache.spark.ml.linalg.VectorUDT",
+      "pyClass" : "pyspark.ml.linalg.VectorUDT",
+      "sqlType" : {
+        "type" : "struct",
+        "fields" : [ {
+          "name" : "type",
+          "type" : "byte",
+          "nullable" : false,
+          "metadata" : { }
+        }, {
+          "name" : "size",
+          "type" : "integer",
+          "nullable" : true,
+          "metadata" : { }
+        }, {
+          "name" : "indices",
+          "type" : {
+            "type" : "array",
+            "elementType" : "integer",
+            "containsNull" : false
+          },
+          "nullable" : true,
+          "metadata" : { }
+        }, {
+          "name" : "values",
+          "type" : {
+            "type" : "array",
+            "elementType" : "double",
+            "containsNull" : false
+          },
+          "nullable" : true,
+          "metadata" : { }
+        } ]
+      }
+    },
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "prediction",
+    "type" : "double",
+    "nullable" : false,
+    "metadata" : { }
+  } ]
+}
+and corresponding Parquet message type:
+message spark_schema {
+  optional group features {
+    required int32 type (INT_8);
+    optional int32 size;
+    optional group indices (LIST) {
+      repeated group list {
+        required int32 element;
+      }
+    }
+    optional group values (LIST) {
+      repeated group list {
+        required double element;
+      }
+    }
+  }
+  optional group rawPrediction {
+    required int32 type (INT_8);
+    optional int32 size;
+    optional group indices (LIST) {
+      repeated group list {
+        required int32 element;
+      }
+    }
+    optional group values (LIST) {
+      repeated group list {
+        required double element;
+      }
+    }
+  }
+  optional group probability {
+    required int32 type (INT_8);
+    optional int32 size;
+    optional group indices (LIST) {
+      repeated group list {
+        required int32 element;
+      }
+    }
+    optional group values (LIST) {
+      repeated group list {
+        required double element;
+      }
+    }
+  }
+  required double prediction;
+}
+
+
+21/08/26 05:36:34 INFO compress.CodecPool: Got brand-new compressor [.snappy]
+21/08/26 05:36:34 INFO datasources.FileScanRDD: Reading File path: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv, range: 0-751253, partition values: [empty row]
+21/08/26 05:36:34 WARN csv.CSVDataSource: CSV header does not conform to the schema.
+ Header: credit.policy, purpose, int.rate, installment, log.annual.inc, dti, fico, days.with.cr.line, revol.bal, revol.util, inq.last.6mths, delinq.2yrs, pub.rec, not.fully.paid
+ Schema: credit_policy, purpose, int_rate, installment, log_annual_inc, dti, fico, days_with_cr_line, revol_bal, revol_util, inq_last_6mths, delinq_2yrs, pub_rec, not_fully_paid
+Expected: credit_policy but found: credit.policy
+CSV file: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv
+21/08/26 05:36:35 INFO hadoop.InternalParquetRecordWriter: Flushing mem columnStore to file. allocated memory: 935500
+21/08/26 05:36:35 INFO output.FileOutputCommitter: Saved output of task 'attempt_20210826053634_0007_m_000000_7' to hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/output/p_date=202108260
+53634/_temporary/0/task_20210826053634_0007_m_000000
+21/08/26 05:36:35 INFO mapred.SparkHadoopMapRedUtil: attempt_20210826053634_0007_m_000000_7: Committed
+21/08/26 05:36:35 INFO executor.Executor: Finished task 0.0 in stage 7.0 (TID 7). 2354 bytes result sent to driver
+21/08/26 05:36:35 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 7.0 (TID 7) in 641 ms on localhost (executor driver) (1/1)
+21/08/26 05:36:35 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 7.0, whose tasks have all completed, from pool
+21/08/26 05:36:35 INFO scheduler.DAGScheduler: ResultStage 7 (parquet at NativeMethodAccessorImpl.java:0) finished in 0.667 s
+21/08/26 05:36:35 INFO scheduler.DAGScheduler: Job 6 finished: parquet at NativeMethodAccessorImpl.java:0, took 0.670822 s
+21/08/26 05:36:35 INFO datasources.FileFormatWriter: Write Job 90f37f24-3594-45ea-a0ca-dfc3985e341b committed.
+21/08/26 05:36:35 INFO datasources.FileFormatWriter: Finished processing stats for write job 90f37f24-3594-45ea-a0ca-dfc3985e341b.
+21/08/26 05:36:35 INFO streaming.CheckpointFileManager: Writing atomically to hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/commits/0 using temp file hdfs://bigdataanalyti
+cs2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/commits/.0.c037784a-b2d1-45f2-b733-8864bde1287a.tmp
+21/08/26 05:36:35 INFO streaming.CheckpointFileManager: Renamed temp file hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/commits/.0.c037784a-b2d1-45f2-b733-8864bde1287a.tmp
+ to hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/tmp/ml_checkpoint/20210826053631/commits/0
+21/08/26 05:36:35 INFO streaming.MicroBatchExecution: Streaming query made progress: {
+  "id" : "5ad776f2-b994-4c12-8995-88b7e1e3d667",
+  "runId" : "0dd84be3-f175-43a5-a492-7ef0e9ab9b79",
+  "name" : null,
+  "timestamp" : "2021-08-26T05:36:31.861Z",
+  "batchId" : 0,
+  "numInputRows" : 19181,
+  "processedRowsPerSecond" : 5486.5560640732265,
+  "durationMs" : {
+    "addBatch" : 3202,
+    "getBatch" : 52,
+    "getOffset" : 79,
+    "queryPlanning" : 43,
+    "triggerExecution" : 3496,
+    "walCommit" : 54
+  },
+  "stateOperators" : [ ],
+  "sources" : [ {
+    "description" : "FileStreamSource[hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/*]",
+    "startOffset" : null,
+    "endOffset" : {
+      "logOffset" : 0
+    },
+    "numInputRows" : 19181,
+    "processedRowsPerSecond" : 5486.5560640732265
+  } ],
+  "sink" : {
+    "description" : "ForeachBatchSink"
+  }
+}
+21/08/26 05:36:40 INFO datasources.InMemoryFileIndex: It took 23 ms to list leaf files for 3 paths.
+21/08/26 05:36:40 ERROR streaming.MicroBatchExecution: Query [id = 5ad776f2-b994-4c12-8995-88b7e1e3d667, runId = 0dd84be3-f175-43a5-a492-7ef0e9ab9b79] terminated with error
+java.lang.AssertionError: assertion failed: Conflicting directory structures detected. Suspicious paths:
+        hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/models/model_best/metadata
+        hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/models/model_best/data
+        hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data
+        hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/output
+
+If provided paths are partition directories, please set "basePath" in the options of the data source to specify the root directory of the table. If there are multiple root directories, please load them separately and then union them.
+        at scala.Predef$.assert(Predef.scala:170)
+        at org.apache.spark.sql.execution.datasources.PartitioningUtils$.parsePartitions(PartitioningUtils.scala:156)
+        at org.apache.spark.sql.execution.datasources.PartitioningUtils$.parsePartitions(PartitioningUtils.scala:100)
+        at org.apache.spark.sql.execution.datasources.PartitioningAwareFileIndex.inferPartitioning(PartitioningAwareFileIndex.scala:131)
+        at org.apache.spark.sql.execution.datasources.InMemoryFileIndex.partitionSpec(InMemoryFileIndex.scala:71)
+        at org.apache.spark.sql.execution.datasources.PartitioningAwareFileIndex.allFiles(PartitioningAwareFileIndex.scala:89)
+        at org.apache.spark.sql.execution.streaming.FileStreamSource.allFilesUsingInMemoryFileIndex(FileStreamSource.scala:193)
+        at org.apache.spark.sql.execution.streaming.FileStreamSource.fetchAllFiles(FileStreamSource.scala:233)
+        at org.apache.spark.sql.execution.streaming.FileStreamSource.fetchMaxOffset(FileStreamSource.scala:111)
+        at org.apache.spark.sql.execution.streaming.FileStreamSource.getOffset(FileStreamSource.scala:251)
+        at org.apache.spark.sql.execution.streaming.MicroBatchExecution$$anonfun$org$apache$spark$sql$execution$streaming$MicroBatchExecution$$constructNextBatch$1$$anonfun$5$$anonfun$apply$9.apply(MicroBatchExecution.scala:345)
+        at org.apache.spark.sql.execution.streaming.MicroBatchExecution$$anonfun$org$apache$spark$sql$execution$streaming$MicroBatchExecution$$constructNextBatch$1$$anonfun$5$$anonfun$apply$9.apply(MicroBatchExecution.scala:345)
+        at org.apache.spark.sql.execution.streaming.ProgressReporter$class.reportTimeTaken(ProgressReporter.scala:351)
+        at org.apache.spark.sql.execution.streaming.StreamExecution.reportTimeTaken(StreamExecution.scala:58)
+        at org.apache.spark.sql.execution.streaming.MicroBatchExecution$$anonfun$org$apache$spark$sql$execution$streaming$MicroBatchExecution$$constructNextBatch$1$$anonfun$5.apply(MicroBatchExecution.scala:344)
+        at org.apache.spark.sql.execution.streaming.MicroBatchExecution$$anonfun$org$apache$spark$sql$execution$streaming$MicroBatchExecution$$constructNextBatch$1$$anonfun$5.apply(MicroBatchExecution.scala:341)
+        at scala.collection.TraversableLike$$anonfun$map$1.apply(TraversableLike.scala:234)
+        at scala.collection.TraversableLike$$anonfun$map$1.apply(TraversableLike.scala:234)
+        at scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59)
+        at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:48)
+        at scala.collection.TraversableLike$class.map(TraversableLike.scala:234)
+        at scala.collection.AbstractTraversable.map(Traversable.scala:104)
+        at org.apache.spark.sql.execution.streaming.MicroBatchExecution$$anonfun$org$apache$spark$sql$execution$streaming$MicroBatchExecution$$constructNextBatch$1.apply$mcZ$sp(MicroBatchExecution.scala:341)
+        at org.apache.spark.sql.execution.streaming.MicroBatchExecution$$anonfun$org$apache$spark$sql$execution$streaming$MicroBatchExecution$$constructNextBatch$1.apply(MicroBatchExecution.scala:337)
+        at org.apache.spark.sql.execution.streaming.MicroBatchExecution$$anonfun$org$apache$spark$sql$execution$streaming$MicroBatchExecution$$constructNextBatch$1.apply(MicroBatchExecution.scala:337)
+        at org.apache.spark.sql.execution.streaming.MicroBatchExecution.withProgressLocked(MicroBatchExecution.scala:557)
+        at org.apache.spark.sql.execution.streaming.MicroBatchExecution.org$apache$spark$sql$execution$streaming$MicroBatchExecution$$constructNextBatch(MicroBatchExecution.scala:337)
+        at org.apache.spark.sql.execution.streaming.MicroBatchExecution$$anonfun$runActivatedStream$1$$anonfun$apply$mcZ$sp$1.apply$mcV$sp(MicroBatchExecution.scala:183)
+        at org.apache.spark.sql.execution.streaming.MicroBatchExecution$$anonfun$runActivatedStream$1$$anonfun$apply$mcZ$sp$1.apply(MicroBatchExecution.scala:166)
+        at org.apache.spark.sql.execution.streaming.MicroBatchExecution$$anonfun$runActivatedStream$1$$anonfun$apply$mcZ$sp$1.apply(MicroBatchExecution.scala:166)
+        at org.apache.spark.sql.execution.streaming.ProgressReporter$class.reportTimeTaken(ProgressReporter.scala:351)
+        at org.apache.spark.sql.execution.streaming.StreamExecution.reportTimeTaken(StreamExecution.scala:58)
+        at org.apache.spark.sql.execution.streaming.MicroBatchExecution$$anonfun$runActivatedStream$1.apply$mcZ$sp(MicroBatchExecution.scala:166)
+        at org.apache.spark.sql.execution.streaming.ProcessingTimeExecutor.execute(TriggerExecutor.scala:56)
+        at org.apache.spark.sql.execution.streaming.MicroBatchExecution.runActivatedStream(MicroBatchExecution.scala:160)
+        at org.apache.spark.sql.execution.streaming.StreamExecution.org$apache$spark$sql$execution$streaming$StreamExecution$$runStream(StreamExecution.scala:281)
+        at org.apache.spark.sql.execution.streaming.StreamExecution$$anon$1.run(StreamExecution.scala:193)
+Traceback (most recent call last):
+  File "/home/student782_3/stream.py", line 84, in <module>
+    stream.awaitTermination()
+  File "/spark2.4/python/lib/pyspark.zip/pyspark/sql/streaming.py", line 103, in awaitTermination
+  File "/spark2.4/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py", line 1257, in __call__
+  File "/spark2.4/python/lib/pyspark.zip/pyspark/sql/utils.py", line 75, in deco
+pyspark.sql.utils.StreamingQueryException: u'assertion failed: Conflicting directory structures detected. Suspicious paths:\x08\n\thdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/models/m
+odel_best/metadata\n\thdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/models/model_best/data\n\thdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_
+data\n\thdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/output\n\nIf provided paths are partition directories, please set "basePath" in the options of the data source to specify the root
+directory of the table. If there are multiple root directories, please load them separately and then union them.\n=== Streaming Query ===\nIdentifier: [id = 5ad776f2-b994-4c12-8995-88b7e1e3d667, runId = 0dd84be3-f175-43a5-a492-7ef0e9ab
+9b79]\nCurrent Committed Offsets: {FileStreamSource[hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/*]: {"logOffset":0}}\nCurrent Available Offsets: {FileStreamSource[hdfs://bigdataanalyt
+ics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/*]: {"logOffset":0}}\n\nCurrent State: ACTIVE\nThread State: RUNNABLE\n\nLogical Plan:\nFileStreamSource[hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:
+8020/user/student782_3/coursework/ml_data/*]'
+21/08/26 05:36:40 INFO spark.SparkContext: Invoking stop() from shutdown hook
+21/08/26 05:36:40 INFO server.AbstractConnector: Stopped Spark@2e2c2d7b{HTTP/1.1,[http/1.1]}{0.0.0.0:4040}
+21/08/26 05:36:40 INFO ui.SparkUI: Stopped Spark web UI at http://bigdataanalytics2-worker-shdpt-v31-1-0.novalocal:4040
+21/08/26 05:36:40 INFO spark.MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+21/08/26 05:36:40 INFO memory.MemoryStore: MemoryStore cleared
+21/08/26 05:36:40 INFO storage.BlockManager: BlockManager stopped
+21/08/26 05:36:40 INFO storage.BlockManagerMaster: BlockManagerMaster stopped
+21/08/26 05:36:40 INFO scheduler.OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+21/08/26 05:36:40 INFO spark.SparkContext: Successfully stopped SparkContext
+21/08/26 05:36:40 INFO util.ShutdownHookManager: Shutdown hook called
+21/08/26 05:36:40 INFO util.ShutdownHookManager: Deleting directory /tmp/spark-03ab13ac-b98f-4e79-a279-9a0dd67ed077
+21/08/26 05:36:40 INFO util.ShutdownHookManager: Deleting directory /tmp/spark-2a4a82b9-ebd5-4a52-98c1-27e0187cded7
+21/08/26 05:36:40 INFO util.ShutdownHookManager: Deleting directory /tmp/spark-2a4a82b9-ebd5-4a52-98c1-27e0187cded7/pyspark-78e6552b-836a-47fd-9b33-38086dfec58b
+[student782_3@bigdataanalytics2-worker-shdpt-v31-1-0 ~]$

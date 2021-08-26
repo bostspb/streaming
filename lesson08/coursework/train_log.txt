@@ -1,0 +1,241 @@
+>>> from pyspark.ml.evaluation import BinaryClassificationEvaluator
+>>> from pyspark.ml.feature import VectorAssembler, StringIndexer
+>>> from pyspark.ml.classification import LogisticRegression
+>>> from pyspark.ml.tuning import ParamGridBuilder, TrainValidationSplit
+>>> from pyspark.sql import SparkSession
+>>> from pyspark.sql import functions as F
+>>> from pyspark.sql.types import StructType, StringType, DoubleType, IntegerType
+>>>
+>>> spark = SparkSession.builder.appName("coursework_student782_3_app").master("local[*]").getOrCreate()
+>>>
+>>> data_path = "coursework/ml_data/loan_data.csv"
+>>> model_dir = "coursework/ml_data/models"
+>>> schema = StructType() \
+...     .add("credit_policy", IntegerType()) \
+...     .add("purpose", StringType()) \
+...     .add("int_rate", DoubleType()) \
+...     .add("installment", DoubleType()) \
+...     .add("log_annual_inc", DoubleType()) \
+...     .add("dti", DoubleType()) \
+...     .add("fico", IntegerType()) \
+...     .add("days_with_cr_line", DoubleType()) \
+...     .add("revol_bal", IntegerType()) \
+...     .add("revol_util", DoubleType()) \
+...     .add("inq_last_6mths", IntegerType()) \
+...     .add("delinq_2yrs", IntegerType()) \
+...     .add("pub_rec", IntegerType()) \
+...     .add("not_fully_paid", IntegerType())
+>>>
+>>> data = spark\
+...     .read\
+...     .format("csv")\
+...     .schema(schema) \
+...     .options(inferSchema=True, header=True) \
+...     .load(data_path)
+     .setLabelCol("label") \
+            .setMetricName("areaUnderROC")
+
+
+def prepare_data(data, features, target):
+    # features
+    f_columns = ",".join(features).split(",")
+    # target
+    f_target = ",".join(target).split(",")
+    f_target = list(map(lambda c: F.col(c).alias("label"), f_target))
+    # all columns
+    all_columns = ",".join(features + target).split(",")
+    all_columns = list(map(lambda c: F.col(c), all_columns))
+    # model data set
+    model_data = data.select(all_columns).dropna()
+    # prepare categorical columns
+    if 'purpose' in f_columns:
+        text_columns = ['purpose']
+        output_text_columns = [c + "_index" for c in text_columns]
+        for c in text_columns:
+            string_indexer = StringIndexer(inputCol=c, outputCol=c + '_index').setHandleInvalid("keep")
+            model_data = string_indexer.fit(model_data).transform(model_data)
+        print(model_data.schema.simpleString())
+        model_data.show(3)
+        # update f_columns with indexed text columns
+        f_columns = list(filter(lambda c: c not in text_columns, f_columns))
+        f_columns += output_text_columns
+    # preparation
+    assembler = VectorAssembler(inputCols=f_columns, outputCol='features')
+    model_data = assembler.transform(model_data)
+    model_data = model_data.select('features', f_target[0])
+    model_data.show(3)
+    return model_data
+
+
+def prepare_and_train(data, features, target):
+    model_data = prepare_data(data, features, target)
+    # train, test
+    train, test = model_data.randomSplit([0.8, 0.2], seed=12345)
+    # model
+    lr = LogisticRegression(featuresCol='features', labelCol='label', maxIter=10, regParam=0.01)
+    # train model
+    model = lr.fit(train)
+    # check the model on the test data
+    prediction = model.transform(test)
+    prediction.show(10)
+    evaluation_result = evaluator.evaluate(prediction)
+    print("Evaluation result: {}".format(evaluation_result))
+    return model
+
+
+
+# MODEL #
+features = ["credit_policy,purpose,int_rate,installment,log_annual_inc,dti"]
+model = prepare_and_train(data, features, target)21/08/25 05:29:19 WARN shortcircuit.DomainSocketFactory: The short-circuit local reads feature cannot be used because libhadoop cannot be loaded.
+>>>
+>>> data.show(3)
+[Stage 0:>                                                          (0 + 1) / 1]21/08/25 05:29:23 WARN csv.CSVDataSource: CSV header does not conform to the schema.
+ Header: credit.policy, purpose, int.rate, installment, log.annual.inc, dti, fico, days.with.cr.line, revol.bal, revol.util, inq.last.6mths, delinq.2yrs, pub.rec, not.fully.paid
+ Schema: credit_policy, purpose, int_rate, installment, log_annual_inc, dti, fico, days_with_cr_line, revol_bal, revol_util, inq_last_6mths, delinq_2yrs, pub_rec, not_fully_paid
+Expected: credit_policy but found: credit.policy
+CSV file: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv
++-------------+------------------+--------+-----------+--------------+-----+----+-----------------+---------+----------+--------------+-----------+-------+--------------+
+|credit_policy|           purpose|int_rate|installment|log_annual_inc|  dti|fico|days_with_cr_line|revol_bal|revol_util|inq_last_6mths|delinq_2yrs|pub_rec|not_fully_paid|
++-------------+------------------+--------+-----------+--------------+-----+----+-----------------+---------+----------+--------------+-----------+-------+--------------+
+|            1|debt_consolidation|  0.1189|      829.1|   11.35040654|19.48| 737|      5639.958333|    28854|      52.1|             0|          0|      0|             0|
+|            1|       credit_card|  0.1071|     228.22|   11.08214255|14.29| 707|           2760.0|    33623|      76.7|             0|          0|      0|             0|
+|            1|debt_consolidation|  0.1357|     366.86|   10.37349118|11.63| 682|           4710.0|     3511|      25.6|             1|          0|      0|             0|
++-------------+------------------+--------+-----------+--------------+-----+----+-----------------+---------+----------+--------------+-----------+-------+--------------+
+only showing top 3 rows
+
+>>> print(data.schema.json())
+{"fields":[{"metadata":{},"name":"credit_policy","nullable":true,"type":"integer"},{"metadata":{},"name":"purpose","nullable":true,"type":"string"},{"metadata":{},"name":"int_rate","nullable":true,"type":"double"},{"metadata":{},"name"
+:"installment","nullable":true,"type":"double"},{"metadata":{},"name":"log_annual_inc","nullable":true,"type":"double"},{"metadata":{},"name":"dti","nullable":true,"type":"double"},{"metadata":{},"name":"fico","nullable":true,"type":"i
+nteger"},{"metadata":{},"name":"days_with_cr_line","nullable":true,"type":"double"},{"metadata":{},"name":"revol_bal","nullable":true,"type":"integer"},{"metadata":{},"name":"revol_util","nullable":true,"type":"double"},{"metadata":{},
+"name":"inq_last_6mths","nullable":true,"type":"integer"},{"metadata":{},"name":"delinq_2yrs","nullable":true,"type":"integer"},{"metadata":{},"name":"pub_rec","nullable":true,"type":"integer"},{"metadata":{},"name":"not_fully_paid","n
+ullable":true,"type":"integer"}],"type":"struct"}
+>>>
+>>> # target
+... target = ["not_fully_paid"]
+>>>
+>>> # model evaluator
+... evaluator = BinaryClassificationEvaluator() \
+...             .setLabelCol("label") \
+...             .setMetricName("areaUnderROC")
+>>>
+>>>
+>>> def prepare_data(data, features, target):
+...     # features
+...     f_columns = ",".join(features).split(",")
+...     # target
+...     f_target = ",".join(target).split(",")
+...     f_target = list(map(lambda c: F.col(c).alias("label"), f_target))
+...     # all columns
+...     all_columns = ",".join(features + target).split(",")
+...     all_columns = list(map(lambda c: F.col(c), all_columns))
+...     # model data set
+...     model_data = data.select(all_columns).dropna()
+...     # prepare categorical columns
+...     if 'purpose' in f_columns:
+...         text_columns = ['purpose']
+...         output_text_columns = [c + "_index" for c in text_columns]
+...         for c in text_columns:
+...             string_indexer = StringIndexer(inputCol=c, outputCol=c + '_index').setHandleInvalid("keep")
+...             model_data = string_indexer.fit(model_data).transform(model_data)
+...         print(model_data.schema.simpleString())
+...         model_data.show(3)
+...         # update f_columns with indexed text columns
+...         f_columns = list(filter(lambda c: c not in text_columns, f_columns))
+...         f_columns += output_text_columns
+...     # preparation
+...     assembler = VectorAssembler(inputCols=f_columns, outputCol='features')
+...     model_data = assembler.transform(model_data)
+...     model_data = model_data.select('features', f_target[0])
+...     model_data.show(3)
+...     return model_data
+...
+>>>
+>>> def prepare_and_train(data, features, target):
+...     model_data = prepare_data(data, features, target)
+...     # train, test
+...     train, test = model_data.randomSplit([0.8, 0.2], seed=12345)
+...     # model
+...     lr = LogisticRegression(featuresCol='features', labelCol='label', maxIter=10, regParam=0.01)
+...     # train model
+...     model = lr.fit(train)
+...     # check the model on the test data
+...     prediction = model.transform(test)
+...     prediction.show(10)
+...     evaluation_result = evaluator.evaluate(prediction)
+...     print("Evaluation result: {}".format(evaluation_result))
+...     return model
+...
+>>>
+>>>
+>>> # MODEL #
+... features = ["credit_policy,purpose,int_rate,installment,log_annual_inc,dti"]
+>>> model = prepare_and_train(data, features, target)
+21/08/25 05:29:36 WARN csv.CSVDataSource: CSV header does not conform to the schema.
+ Header: credit.policy, purpose, int.rate, installment, log.annual.inc, dti, not.fully.paid
+ Schema: credit_policy, purpose, int_rate, installment, log_annual_inc, dti, not_fully_paid
+Expected: credit_policy but found: credit.policy
+CSV file: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv
+struct<credit_policy:int,purpose:string,int_rate:double,installment:double,log_annual_inc:double,dti:double,not_fully_paid:int,purpose_index:double>
+21/08/25 05:29:36 WARN csv.CSVDataSource: CSV header does not conform to the schema.
+ Header: credit.policy, purpose, int.rate, installment, log.annual.inc, dti, fico, days.with.cr.line, revol.bal, revol.util, inq.last.6mths, delinq.2yrs, pub.rec, not.fully.paid
+ Schema: credit_policy, purpose, int_rate, installment, log_annual_inc, dti, fico, days_with_cr_line, revol_bal, revol_util, inq_last_6mths, delinq_2yrs, pub_rec, not_fully_paid
+Expected: credit_policy but found: credit.policy
+CSV file: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv
++-------------+------------------+--------+-----------+--------------+-----+--------------+-------------+
+|credit_policy|           purpose|int_rate|installment|log_annual_inc|  dti|not_fully_paid|purpose_index|
++-------------+------------------+--------+-----------+--------------+-----+--------------+-------------+
+|            1|debt_consolidation|  0.1189|      829.1|   11.35040654|19.48|             0|          0.0|
+|            1|       credit_card|  0.1071|     228.22|   11.08214255|14.29|             0|          2.0|
+|            1|debt_consolidation|  0.1357|     366.86|   10.37349118|11.63|             0|          0.0|
++-------------+------------------+--------+-----------+--------------+-----+--------------+-------------+
+only showing top 3 rows
+
+21/08/25 05:29:37 WARN csv.CSVDataSource: CSV header does not conform to the schema.
+ Header: credit.policy, purpose, int.rate, installment, log.annual.inc, dti, fico, days.with.cr.line, revol.bal, revol.util, inq.last.6mths, delinq.2yrs, pub.rec, not.fully.paid
+ Schema: credit_policy, purpose, int_rate, installment, log_annual_inc, dti, fico, days_with_cr_line, revol_bal, revol_util, inq_last_6mths, delinq_2yrs, pub_rec, not_fully_paid
+Expected: credit_policy but found: credit.policy
+CSV file: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv
++--------------------+-----+
+|            features|label|
++--------------------+-----+
+|[1.0,0.1189,829.1...|    0|
+|[1.0,0.1071,228.2...|    0|
+|[1.0,0.1357,366.8...|    0|
++--------------------+-----+
+only showing top 3 rows
+
+21/08/25 05:29:38 WARN csv.CSVDataSource: CSV header does not conform to the schema.
+ Header: credit.policy, purpose, int.rate, installment, log.annual.inc, dti, fico, days.with.cr.line, revol.bal, revol.util, inq.last.6mths, delinq.2yrs, pub.rec, not.fully.paid
+ Schema: credit_policy, purpose, int_rate, installment, log_annual_inc, dti, fico, days_with_cr_line, revol_bal, revol_util, inq_last_6mths, delinq_2yrs, pub_rec, not_fully_paid
+Expected: credit_policy but found: credit.policy
+CSV file: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv
+21/08/25 05:29:39 WARN netlib.BLAS: Failed to load implementation from: com.github.fommil.netlib.NativeSystemBLAS
+21/08/25 05:29:39 WARN netlib.BLAS: Failed to load implementation from: com.github.fommil.netlib.NativeRefBLAS
+21/08/25 05:29:40 WARN csv.CSVDataSource: CSV header does not conform to the schema.
+ Header: credit.policy, purpose, int.rate, installment, log.annual.inc, dti, fico, days.with.cr.line, revol.bal, revol.util, inq.last.6mths, delinq.2yrs, pub.rec, not.fully.paid
+ Schema: credit_policy, purpose, int_rate, installment, log_annual_inc, dti, fico, days_with_cr_line, revol_bal, revol_util, inq_last_6mths, delinq_2yrs, pub_rec, not_fully_paid
+Expected: credit_policy but found: credit.policy
+CSV file: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv
++--------------------+-----+--------------------+--------------------+----------+
+|            features|label|       rawPrediction|         probability|prediction|
++--------------------+-----+--------------------+--------------------+----------+
+|[0.0,0.0743,49.72...|    0|[1.68975119197589...|[0.84419143639828...|       0.0|
+|[0.0,0.0743,93.23...|    1|[1.85790606388935...|[0.86505269600895...|       0.0|
+|[0.0,0.0743,93.23...|    0|[2.07560593794574...|[0.88850949838600...|       0.0|
+|[0.0,0.0768,405.4...|    1|[1.80016966670739...|[0.85816958726087...|       0.0|
+|[0.0,0.0774,156.1...|    0|[2.14552536042169...|[0.89524989781493...|       0.0|
+|[0.0,0.0775,156.1...|    0|[1.97817609091457...|[0.87848659801892...|       0.0|
+|[0.0,0.0832,56.68...|    0|[1.91004393196986...|[0.87102408330133...|       0.0|
+|[0.0,0.0838,63.03...|    0|[1.84114575626439...|[0.86308415765466...|       0.0|
+|[0.0,0.0838,81.94...|    1|[1.63363502534940...|[0.83666699249810...|       0.0|
+|[0.0,0.0859,237.0...|    0|[1.52181717293253...|[0.82080591269689...|       0.0|
++--------------------+-----+--------------------+--------------------+----------+
+only showing top 10 rows
+
+21/08/25 05:29:40 WARN csv.CSVDataSource: CSV header does not conform to the schema.
+ Header: credit.policy, purpose, int.rate, installment, log.annual.inc, dti, fico, days.with.cr.line, revol.bal, revol.util, inq.last.6mths, delinq.2yrs, pub.rec, not.fully.paid
+ Schema: credit_policy, purpose, int_rate, installment, log_annual_inc, dti, fico, days_with_cr_line, revol_bal, revol_util, inq_last_6mths, delinq_2yrs, pub_rec, not_fully_paid
+Expected: credit_policy but found: credit.policy
+CSV file: hdfs://bigdataanalytics2-head-shdpt-v31-1-0.novalocal:8020/user/student782_3/coursework/ml_data/loan_data.csv
+Evaluation result: 0.683703877027
+>>> model.write().overwrite().save(model_dir + "/model_best")
